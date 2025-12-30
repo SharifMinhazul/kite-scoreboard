@@ -48,13 +48,18 @@ export function RoundColumn({
       <div className="mb-6 text-center">
         <h3
           className={cn(
-            "text-sm font-bold uppercase tracking-wider",
-            round === "Final" && "text-primary text-lg"
+            "text-sm font-bold uppercase tracking-wider font-display",
+            round === "Final" && "text-lg text-transparent bg-clip-text bg-gradient-to-r from-primary via-secondary to-accent",
+            round !== "Final" && "text-muted-foreground"
           )}
         >
           {ROUND_LABELS[round]}
         </h3>
-        <div className="mt-1 h-[2px] bg-gradient-to-r from-transparent via-border to-transparent" />
+        <div className={cn(
+          "mt-2 h-[2px] bg-gradient-to-r from-transparent to-transparent",
+          round === "Final" && "via-primary",
+          round !== "Final" && "via-border"
+        )} />
       </div>
 
       {/* Matches Container */}

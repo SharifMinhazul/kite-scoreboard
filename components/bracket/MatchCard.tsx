@@ -21,15 +21,23 @@ export function MatchCard({ match, orientation = "center", showConnector = false
     <div className="relative">
       <Card
         className={cn(
-          "p-4 min-w-[200px] border-2 transition-all duration-300",
-          match.status === "live" && "border-secondary animate-pulse-slow",
-          match.status === "completed" && "border-muted",
+          "p-4 min-w-[200px] border-2 transition-all duration-300 bg-card/50 backdrop-blur-sm stripe-pattern relative overflow-hidden",
+          match.status === "live" && "border-secondary shadow-[0_0_20px_rgba(255,0,128,0.3)]",
+          match.status === "completed" && "border-primary/30",
           match.status === "scheduled" && "border-border"
         )}
       >
+        {/* Top accent bar */}
+        <div className={cn(
+          "absolute top-0 left-0 right-0 h-0.5",
+          match.status === "live" && "bg-secondary",
+          match.status === "completed" && "bg-primary",
+          match.status === "scheduled" && "bg-muted"
+        )}></div>
+
         {/* Match Header */}
         <div className="flex justify-between items-center mb-3">
-          <span className="text-xs font-mono text-muted-foreground">{match.id}</span>
+          <span className="text-[10px] font-display tracking-wider text-muted-foreground">{match.id}</span>
           <Badge
             variant={
               match.status === "completed"
@@ -39,8 +47,9 @@ export function MatchCard({ match, orientation = "center", showConnector = false
                 : "outline"
             }
             className={cn(
-              "text-[10px]",
-              match.status === "live" && "animate-pulse"
+              "text-[9px] font-display tracking-wider",
+              match.status === "live" && "bg-secondary electric-pulse",
+              match.status === "completed" && "bg-primary"
             )}
           >
             {match.status.toUpperCase()}
@@ -79,7 +88,7 @@ export function MatchCard({ match, orientation = "center", showConnector = false
           </div>
 
           {/* VS Divider */}
-          <div className="text-center text-[10px] text-muted-foreground font-bold">VS</div>
+          <div className="text-center text-[10px] text-muted-foreground font-display tracking-widest">VS</div>
 
           {/* Player 2 */}
           <div
@@ -113,9 +122,9 @@ export function MatchCard({ match, orientation = "center", showConnector = false
 
         {/* Winner Announcement */}
         {winner && (
-          <div className="mt-3 pt-3 border-t border-border">
-            <p className="text-xs text-center text-primary font-bold animate-pulse">
-              🏆 {winner} Wins!
+          <div className="mt-3 pt-3 border-t border-primary/30">
+            <p className="text-[10px] text-center text-primary font-display tracking-wider electric-pulse">
+              WINNER: {winner.toUpperCase()}
             </p>
           </div>
         )}

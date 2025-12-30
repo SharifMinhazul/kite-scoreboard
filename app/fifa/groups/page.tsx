@@ -41,26 +41,49 @@ export default async function GroupsPage() {
   const row2Groups = groups.slice(4, 8); // Groups E, F, G, H
 
   return (
-    <div className="min-h-screen p-4 md:p-8">
+    <div className="min-h-screen p-4 md:p-8 relative overflow-hidden">
+      {/* Corner accent bars */}
+      <div className="fixed top-0 left-0 w-2 h-32 bg-gradient-to-b from-primary to-transparent z-50"></div>
+      <div className="fixed top-0 right-0 w-32 h-2 bg-gradient-to-l from-accent to-transparent z-50"></div>
+
+      {/* Navigation */}
+      <div className="fixed top-6 right-6 z-50 flex gap-2">
+        <Button asChild variant="outline" size="sm" className="border-primary text-primary hover:bg-primary hover:text-primary-foreground font-display">
+          <Link href="/">HOME</Link>
+        </Button>
+        <Button asChild variant="outline" size="sm" className="border-primary text-primary hover:bg-primary hover:text-primary-foreground font-display">
+          <Link href="/fifa">BRACKET</Link>
+        </Button>
+        <Button asChild variant="default" size="sm" className="bg-primary hover:bg-primary/90 font-display">
+          <Link href="/admin/fifa/groups">ADMIN</Link>
+        </Button>
+      </div>
+
       {/* Header */}
-      <div className="max-w-7xl mx-auto mb-8">
-        <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-4 mb-4">
-          <div>
-            <h1 className="text-4xl md:text-5xl font-bold mb-2 bg-gradient-to-r from-primary via-secondary to-accent bg-clip-text text-transparent">
-              Group Stage Standings
-            </h1>
-            <p className="text-xl text-muted-foreground">FIFA Tournament - Kite Games Studio</p>
+      <div className="max-w-7xl mx-auto mb-8 broadcast-title">
+        <div className="text-center mb-6">
+          <div className="inline-block mb-4">
+            <div className="text-xs font-display tracking-[0.3em] text-primary mb-2">GROUP STAGE • ROUND ROBIN</div>
+            <div className="h-px bg-gradient-to-r from-transparent via-primary to-transparent"></div>
           </div>
-          <div className="flex gap-2">
-            <Button asChild variant="outline" size="sm">
-              <Link href="/">Home</Link>
-            </Button>
-            <Button asChild variant="secondary" size="sm">
-              <Link href="/fifa">Knockout Bracket</Link>
-            </Button>
-            <Button asChild variant="outline" size="sm">
-              <Link href="/admin/fifa/groups">Admin</Link>
-            </Button>
+
+          <h1 className="text-5xl md:text-7xl lg:text-8xl font-bold mb-3 leading-none">
+            <span className="block text-transparent bg-clip-text bg-gradient-to-r from-primary via-secondary to-accent">
+              FIFA WORLD CUP
+            </span>
+            <span className="block text-foreground mt-1">
+              GROUP STANDINGS
+            </span>
+          </h1>
+
+          <div className="flex items-center justify-center gap-4 mt-6">
+            <div className="h-px w-12 bg-primary"></div>
+            <div className="electric-pulse w-3 h-3 bg-primary rounded-full"></div>
+            <p className="text-[10px] font-display tracking-widest text-muted-foreground">
+              KITE GAMES STUDIO
+            </p>
+            <div className="electric-pulse w-3 h-3 bg-primary rounded-full"></div>
+            <div className="h-px w-12 bg-primary"></div>
           </div>
         </div>
         <div className="h-[2px] bg-gradient-to-r from-transparent via-primary to-transparent" />
@@ -70,38 +93,46 @@ export default async function GroupsPage() {
       <div className="max-w-7xl mx-auto space-y-8">
         {/* Row 1: Groups A, B, C, D */}
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
-          {row1Groups.map((group) => (
-            <GroupStandingsCard key={group.name} group={group} />
+          {row1Groups.map((group, index) => (
+            <div key={group.name} className={`broadcast-wipe stagger-${index + 1}`}>
+              <GroupStandingsCard group={group} />
+            </div>
           ))}
         </div>
 
         {/* Row 2: Groups E, F, G, H */}
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
-          {row2Groups.map((group) => (
-            <GroupStandingsCard key={group.name} group={group} />
+          {row2Groups.map((group, index) => (
+            <div key={group.name} className={`broadcast-wipe stagger-${index + 1}`}>
+              <GroupStandingsCard group={group} />
+            </div>
           ))}
         </div>
       </div>
 
       {/* Legend */}
-      <div className="max-w-7xl mx-auto mt-12 p-6 bg-card rounded-lg border">
-        <h3 className="font-bold mb-4">Legend</h3>
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-4 text-sm">
-          <div className="flex items-center gap-2">
-            <Badge variant="default" className="bg-primary">Top 2</Badge>
-            <span className="text-muted-foreground">Qualify for Round of 16</span>
+      <div className="max-w-7xl mx-auto mt-12 p-8 bg-card/50 backdrop-blur-sm stripe-pattern border-2 border-primary/30 relative overflow-hidden">
+        <div className="absolute top-0 left-0 right-0 h-1 bg-primary"></div>
+
+        <h3 className="font-bold text-xl mb-6 font-display tracking-wider text-transparent bg-clip-text bg-gradient-to-r from-primary to-accent">
+          TOURNAMENT INFO
+        </h3>
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 text-sm font-mono">
+          <div className="flex items-center gap-3 p-3 bg-primary/5 border border-primary/20">
+            <Badge variant="default" className="bg-primary font-display text-[10px] tracking-wider">Q</Badge>
+            <span className="text-muted-foreground">TOP 2 ADVANCE TO R16</span>
           </div>
-          <div className="text-muted-foreground">
-            <strong>Points:</strong> Win = 3, Draw = 1, Loss = 0
+          <div className="p-3 bg-muted/20 border border-border">
+            <span className="text-primary font-bold">POINTS:</span> <span className="text-muted-foreground">W=3 • D=1 • L=0</span>
           </div>
-          <div className="text-muted-foreground">
-            <strong>W/L:</strong> Wins / Losses
+          <div className="p-3 bg-muted/20 border border-border">
+            <span className="text-primary font-bold">W/L:</span> <span className="text-muted-foreground">WINS / LOSSES</span>
           </div>
-          <div className="text-muted-foreground">
-            <strong>GD:</strong> Goal Difference (Goals For - Goals Against)
+          <div className="p-3 bg-muted/20 border border-border">
+            <span className="text-primary font-bold">GD:</span> <span className="text-muted-foreground">GOAL DIFFERENCE</span>
           </div>
-          <div className="text-muted-foreground">
-            <strong>Sorting:</strong> Points → GD → Goals For
+          <div className="p-3 bg-muted/20 border border-border col-span-1 md:col-span-2">
+            <span className="text-primary font-bold">TIEBREAKER:</span> <span className="text-muted-foreground">POINTS → GD → GF</span>
           </div>
         </div>
       </div>
@@ -124,12 +155,19 @@ function GroupStandingsCard({ group }: { group: IGroup }) {
                  standings[0].points > 0;
 
   return (
-    <Card className="border-2">
+    <Card className="border-2 border-primary/30 bg-card/50 backdrop-blur-sm stripe-pattern relative overflow-hidden">
+      {/* Accent bar */}
+      <div className="absolute top-0 left-0 right-0 h-1 bg-primary"></div>
+      {/* Corner decoration */}
+      <div className="absolute bottom-0 right-0 w-12 h-12 border-t-2 border-l-2 border-primary/20"></div>
+
       <CardHeader className="pb-3">
         <CardTitle className="text-center text-2xl font-bold flex items-center justify-center gap-2">
-          Group {group.name}
+          <span className="text-transparent bg-clip-text bg-gradient-to-r from-primary to-accent">
+            GROUP {group.name}
+          </span>
           {hasTie && (
-            <Badge variant="destructive" className="text-[10px]">TIE</Badge>
+            <Badge variant="destructive" className="text-[10px] font-display electric-pulse">TIE</Badge>
           )}
         </CardTitle>
       </CardHeader>

@@ -36,42 +36,65 @@ export default async function DartScoreboardPage() {
   const currentRound = tournament.rounds.find((r) => r.roundNumber === tournament.currentRound);
 
   return (
-    <div className="min-h-screen p-4 md:p-8">
+    <div className="min-h-screen p-4 md:p-8 relative overflow-hidden">
+      {/* Corner accent bars */}
+      <div className="fixed top-0 left-0 w-2 h-32 bg-gradient-to-b from-secondary to-transparent z-50"></div>
+      <div className="fixed top-0 right-0 w-32 h-2 bg-gradient-to-l from-accent to-transparent z-50"></div>
+
+      {/* Navigation */}
+      <div className="fixed top-6 right-6 z-50 flex gap-2">
+        <Button asChild variant="outline" size="sm" className="border-secondary text-secondary hover:bg-secondary hover:text-secondary-foreground font-display">
+          <Link href="/">HOME</Link>
+        </Button>
+        <Button asChild variant="default" size="sm" className="bg-secondary hover:bg-secondary/90 font-display">
+          <Link href="/admin/dart">ADMIN ACCESS</Link>
+        </Button>
+      </div>
+
       {/* Header */}
-      <div className="max-w-7xl mx-auto mb-8">
-        <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-4 mb-4">
-          <div>
-            <h1 className="text-4xl md:text-5xl font-bold mb-2 bg-gradient-to-r from-primary via-secondary to-accent bg-clip-text text-transparent">
-              🎯 Dart Tournament
-            </h1>
-            <p className="text-xl text-muted-foreground">Kite Games Studio</p>
+      <div className="max-w-7xl mx-auto mb-8 broadcast-title">
+        <div className="text-center mb-6">
+          <div className="inline-block mb-4">
+            <div className="text-xs font-display tracking-[0.3em] text-secondary mb-2">SURVIVAL MODE • ELIMINATION ROUNDS</div>
+            <div className="h-px bg-gradient-to-r from-transparent via-secondary to-transparent"></div>
           </div>
-          <div className="flex gap-2">
-            <Button asChild variant="outline" size="sm">
-              <Link href="/">Home</Link>
-            </Button>
-            <Button asChild variant="secondary" size="sm">
-              <Link href="/admin/dart">Admin</Link>
-            </Button>
+
+          <h1 className="text-5xl md:text-7xl lg:text-8xl font-bold mb-3 leading-none">
+            <span className="block text-transparent bg-clip-text bg-gradient-to-r from-secondary via-accent to-primary">
+              DART
+            </span>
+            <span className="block text-foreground mt-1">
+              CHALLENGE
+            </span>
+          </h1>
+
+          <div className="flex items-center justify-center gap-4 mt-6">
+            <div className="h-px w-12 bg-secondary"></div>
+            <div className="electric-pulse w-3 h-3 bg-secondary rounded-full"></div>
+            <p className="text-[10px] font-display tracking-widest text-muted-foreground">
+              KITE GAMES STUDIO
+            </p>
+            <div className="electric-pulse w-3 h-3 bg-secondary rounded-full"></div>
+            <div className="h-px w-12 bg-secondary"></div>
           </div>
         </div>
-        <div className="h-[2px] bg-gradient-to-r from-transparent via-primary to-transparent" />
+        <div className="h-[2px] bg-gradient-to-r from-transparent via-secondary to-transparent" />
       </div>
 
       {/* Tournament Status */}
-      <div className="max-w-7xl mx-auto mb-8">
-        <div className="flex gap-4 flex-wrap items-center">
-          <Badge variant="outline" className="px-4 py-2 text-lg">
-            {tournament.isFinished ? "🏁 Tournament Finished" : `🎯 Round ${tournament.currentRound}`}
+      <div className="max-w-7xl mx-auto mb-8 broadcast-wipe stagger-1">
+        <div className="flex gap-4 flex-wrap items-center justify-center">
+          <Badge variant="outline" className="px-5 py-2.5 text-sm font-display tracking-wider border-secondary">
+            {tournament.isFinished ? "TOURNAMENT COMPLETE" : `ROUND ${tournament.currentRound} ACTIVE`}
           </Badge>
           {currentRound && (
             <>
-              <Badge variant="default" className="px-4 py-2">
-                {currentRound.players.length} Players
+              <Badge variant="default" className="px-5 py-2.5 bg-secondary font-display tracking-wider">
+                {currentRound.players.length} COMPETITORS
               </Badge>
               {!tournament.isFinished && currentRound.players.length > 3 && (
-                <Badge variant="secondary" className="px-4 py-2">
-                  Top {Math.ceil(currentRound.players.length / 2)} Qualify
+                <Badge variant="outline" className="px-5 py-2.5 border-accent text-accent font-display tracking-wider">
+                  TOP {Math.ceil(currentRound.players.length / 2)} ADVANCE
                 </Badge>
               )}
             </>
@@ -80,21 +103,21 @@ export default async function DartScoreboardPage() {
       </div>
 
       {/* Rounds Tabs */}
-      <div className="max-w-7xl mx-auto mb-8">
-        <div className="flex gap-2 flex-wrap">
+      <div className="max-w-7xl mx-auto mb-8 broadcast-wipe stagger-2">
+        <div className="flex gap-3 flex-wrap justify-center">
           {allRounds.map((round) => (
             <a
               key={round.roundNumber}
               href={`#round-${round.roundNumber}`}
-              className={`px-4 py-2 rounded-full font-bold transition-all ${
+              className={`px-6 py-2.5 font-display tracking-wider text-sm transition-all border-2 ${
                 round.roundNumber === tournament.currentRound
-                  ? "bg-primary text-primary-foreground"
+                  ? "bg-secondary text-background border-secondary shadow-[0_0_20px_rgba(255,0,128,0.5)]"
                   : round.isCompleted
-                  ? "bg-muted text-muted-foreground"
-                  : "bg-secondary text-secondary-foreground"
+                  ? "bg-muted/30 text-muted-foreground border-muted"
+                  : "bg-transparent text-secondary border-secondary/50 hover:border-secondary"
               }`}
             >
-              Round {round.roundNumber}
+              ROUND {round.roundNumber}
             </a>
           ))}
         </div>
@@ -108,25 +131,30 @@ export default async function DartScoreboardPage() {
           const qualifyThreshold = sortedPlayers[qualifyCount - 1]?.score || 0;
 
           return (
-            <div key={round.roundNumber} id={`round-${round.roundNumber}`}>
-              <Card className="border-2 border-primary/20">
+            <div key={round.roundNumber} id={`round-${round.roundNumber}`} className={`broadcast-wipe stagger-${Math.min(round.roundNumber, 5)}`}>
+              <Card className="border-2 border-secondary/30 bg-card/50 backdrop-blur-sm stripe-pattern relative overflow-hidden">
+                {/* Accent bar */}
+                <div className="absolute top-0 left-0 right-0 h-1 bg-secondary"></div>
+
                 <CardHeader>
                   <div className="flex justify-between items-center">
                     <CardTitle className="text-3xl font-bold flex items-center gap-3">
-                      Round {round.roundNumber}
+                      <span className="text-transparent bg-clip-text bg-gradient-to-r from-secondary to-accent">
+                        ROUND {round.roundNumber}
+                      </span>
                       {round.isCompleted && (
-                        <Badge variant="outline" className="text-sm">
-                          Completed
+                        <Badge variant="outline" className="text-xs font-display border-muted-foreground">
+                          COMPLETE
                         </Badge>
                       )}
                       {round.isActive && !round.isCompleted && (
-                        <Badge variant="default" className="text-sm animate-pulse">
-                          Active
+                        <Badge variant="default" className="text-xs font-display bg-secondary electric-pulse">
+                          LIVE
                         </Badge>
                       )}
                     </CardTitle>
-                    <div className="text-sm text-muted-foreground">
-                      {round.players.length} Player{round.players.length !== 1 ? "s" : ""}
+                    <div className="text-sm font-display text-muted-foreground tracking-wider">
+                      {round.players.length} PLAYERS
                     </div>
                   </div>
                 </CardHeader>
@@ -209,11 +237,18 @@ export default async function DartScoreboardPage() {
 
       {/* Footer Info */}
       {tournament.isFinished && (
-        <div className="max-w-7xl mx-auto mt-12 p-6 bg-card rounded-lg border border-primary">
-          <h3 className="font-bold text-xl mb-2 text-primary">🏆 Tournament Complete!</h3>
-          <p className="text-muted-foreground">
-            Congratulations to all participants! View the final standings above.
-          </p>
+        <div className="max-w-7xl mx-auto mt-12 p-8 bg-card/50 backdrop-blur-sm stripe-pattern border-2 border-secondary relative overflow-hidden">
+          <div className="absolute top-0 left-0 right-0 h-1 bg-secondary"></div>
+          <div className="absolute bottom-0 right-0 w-24 h-24 border-t-2 border-l-2 border-secondary/30"></div>
+
+          <div className="text-center">
+            <h3 className="font-bold text-3xl mb-3 text-transparent bg-clip-text bg-gradient-to-r from-secondary via-accent to-primary">
+              TOURNAMENT COMPLETE
+            </h3>
+            <p className="text-sm font-display tracking-wider text-muted-foreground">
+              ALL ROUNDS FINISHED • FINAL STANDINGS CONFIRMED
+            </p>
+          </div>
         </div>
       )}
     </div>
