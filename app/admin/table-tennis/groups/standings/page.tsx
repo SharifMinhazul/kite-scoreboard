@@ -94,10 +94,10 @@ export default function AdminTTGroupStandingsPage() {
             <p className="text-muted-foreground">Swap tied players if needed</p>
           </div>
           <div className="flex gap-2">
-            <Button asChild variant="secondary">
+            <Button asChild variant="secondary" size="sm">
               <Link href="/admin/table-tennis/groups">Enter Matches</Link>
             </Button>
-            <Button asChild variant="outline">
+            <Button asChild variant="outline" size="sm">
               <Link href="/table-tennis/groups">View Public</Link>
             </Button>
           </div>

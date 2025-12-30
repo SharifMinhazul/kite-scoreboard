@@ -106,11 +106,14 @@ export default function TableTennisSetupPage() {
             <p className="text-muted-foreground">Add players to Round of 16 matches</p>
           </div>
           <div className="flex gap-2">
-            <Button asChild variant="default">
-              <Link href="/admin/table-tennis">Admin Dashboard</Link>
+            <Button asChild variant="outline" size="sm">
+              <Link href="/admin">Dashboard</Link>
             </Button>
-            <Button asChild variant="outline">
-              <Link href="/table-tennis">View Bracket</Link>
+            <Button asChild variant="secondary" size="sm">
+              <Link href="/admin/table-tennis">Manage Matches</Link>
+            </Button>
+            <Button asChild variant="outline" size="sm">
+              <Link href="/table-tennis">View Public</Link>
             </Button>
           </div>
         </div>

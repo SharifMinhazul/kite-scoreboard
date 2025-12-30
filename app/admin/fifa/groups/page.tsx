@@ -137,26 +137,20 @@ export default function AdminGroupsPage() {
             <p className="text-muted-foreground">Enter group match results</p>
           </div>
           <div className="flex gap-2 flex-wrap">
-            <Button asChild variant="default">
-              <Link href="/admin/groups/setup">Add Players</Link>
+            <Button asChild variant="outline" size="sm">
+              <Link href="/admin">Dashboard</Link>
             </Button>
-            <Button asChild variant="secondary">
-              <Link href="/admin/groups/standings">Manage Ties</Link>
+            <Button asChild variant="default" size="sm">
+              <Link href="/admin/fifa/groups/setup">Setup Players</Link>
             </Button>
-            <Button asChild variant="outline">
-              <Link href="/groups">View Standings</Link>
+            <Button asChild variant="secondary" size="sm">
+              <Link href="/admin/fifa/groups/standings">Manage Ties</Link>
             </Button>
-            <Button asChild variant="outline">
-              <Link href="/admin">Knockout Admin</Link>
+            <Button asChild variant="outline" size="sm">
+              <Link href="/admin/fifa">Knockout Admin</Link>
             </Button>
-            <Button asChild variant="outline">
-              <Link href="/admin/dart">🎯 Dart</Link>
-            </Button>
-            <Button asChild variant="outline">
-              <Link href="/admin/table-tennis">🏓 TT Knockout</Link>
-            </Button>
-            <Button asChild variant="outline">
-              <Link href="/admin/table-tennis/groups">🏓 TT Groups</Link>
+            <Button asChild variant="outline" size="sm">
+              <Link href="/fifa/groups">View Public</Link>
             </Button>
           </div>
         </div>

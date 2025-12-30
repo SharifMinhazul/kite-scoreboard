@@ -74,11 +74,14 @@ export default function SetupPage() {
             <p className="text-muted-foreground">Add players to Round of 16 matches</p>
           </div>
           <div className="flex gap-2">
-            <Button asChild variant="outline">
-              <Link href="/admin">Back to Admin</Link>
+            <Button asChild variant="outline" size="sm">
+              <Link href="/admin">Dashboard</Link>
             </Button>
-            <Button asChild>
-              <Link href="/">View Bracket</Link>
+            <Button asChild variant="secondary" size="sm">
+              <Link href="/admin/fifa">Manage Matches</Link>
+            </Button>
+            <Button asChild variant="outline" size="sm">
+              <Link href="/fifa">View Public</Link>
             </Button>
           </div>
         </div>

@@ -179,17 +179,11 @@ export default function AdminDartPage() {
             <p className="text-muted-foreground">Manage players and scores</p>
           </div>
           <div className="flex gap-2 flex-wrap">
-            <Button asChild variant="default">
-              <Link href="/dart">View Public Board</Link>
+            <Button asChild variant="outline" size="sm">
+              <Link href="/admin">Dashboard</Link>
             </Button>
-            <Button asChild variant="outline">
-              <Link href="/admin">Knockout Admin</Link>
-            </Button>
-            <Button asChild variant="outline">
-              <Link href="/admin/groups">Group Admin</Link>
-            </Button>
-            <Button asChild variant="outline">
-              <Link href="/admin/table-tennis">🏓 TT Admin</Link>
+            <Button asChild variant="secondary" size="sm">
+              <Link href="/dart">View Public</Link>
             </Button>
           </div>
         </div>

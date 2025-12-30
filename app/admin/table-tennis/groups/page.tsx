@@ -137,23 +137,20 @@ export default function AdminTTGroupsPage() {
             <p className="text-muted-foreground">Enter group match results</p>
           </div>
           <div className="flex gap-2 flex-wrap">
-            <Button asChild variant="default">
-              <Link href="/admin/table-tennis/groups/setup">Add Players</Link>
+            <Button asChild variant="outline" size="sm">
+              <Link href="/admin">Dashboard</Link>
             </Button>
-            <Button asChild variant="secondary">
+            <Button asChild variant="default" size="sm">
+              <Link href="/admin/table-tennis/groups/setup">Setup Players</Link>
+            </Button>
+            <Button asChild variant="secondary" size="sm">
               <Link href="/admin/table-tennis/groups/standings">Manage Ties</Link>
             </Button>
-            <Button asChild variant="outline">
-              <Link href="/table-tennis/groups">View Standings</Link>
-            </Button>
-            <Button asChild variant="outline">
+            <Button asChild variant="outline" size="sm">
               <Link href="/admin/table-tennis">Knockout Admin</Link>
             </Button>
-            <Button asChild variant="outline">
-              <Link href="/admin">⚽ FIFA</Link>
-            </Button>
-            <Button asChild variant="outline">
-              <Link href="/admin/dart">🎯 Dart</Link>
+            <Button asChild variant="outline" size="sm">
+              <Link href="/table-tennis/groups">View Public</Link>
             </Button>
           </div>
         </div>

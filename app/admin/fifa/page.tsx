@@ -55,20 +55,17 @@ export default async function AdminPage() {
             <p className="text-muted-foreground">Manage tournament matches and scores</p>
           </div>
           <div className="flex gap-2 flex-wrap">
-            <Button asChild variant="default">
-              <Link href="/admin/groups">Group Stage</Link>
+            <Button asChild variant="outline" size="sm">
+              <Link href="/admin">Dashboard</Link>
             </Button>
-            <Button asChild variant="default">
-              <Link href="/admin/dart">🎯 Dart</Link>
+            <Button asChild variant="secondary" size="sm">
+              <Link href="/admin/fifa/groups">Group Stage</Link>
             </Button>
-            <Button asChild variant="default">
-              <Link href="/admin/table-tennis">🏓 Table Tennis</Link>
+            <Button asChild variant="outline" size="sm">
+              <Link href="/admin/fifa/setup">Add Players</Link>
             </Button>
-            <Button asChild variant="secondary">
-              <Link href="/admin/setup">Add Players</Link>
-            </Button>
-            <Button asChild variant="outline">
-              <Link href="/">View Bracket</Link>
+            <Button asChild variant="outline" size="sm">
+              <Link href="/fifa">View Public</Link>
             </Button>
           </div>
         </div>

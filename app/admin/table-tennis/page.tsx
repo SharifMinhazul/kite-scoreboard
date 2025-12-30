@@ -60,23 +60,17 @@ export default async function AdminTableTennisPage() {
             </p>
           </div>
           <div className="flex gap-2 flex-wrap">
-            <Button asChild variant="default">
+            <Button asChild variant="outline" size="sm">
+              <Link href="/admin">Dashboard</Link>
+            </Button>
+            <Button asChild variant="default" size="sm">
               <Link href="/admin/table-tennis/setup">Add Players</Link>
             </Button>
-            <Button asChild variant="secondary">
-              <Link href="/admin/table-tennis/groups">TT Groups Admin</Link>
+            <Button asChild variant="secondary" size="sm">
+              <Link href="/admin/table-tennis/groups">Groups Admin</Link>
             </Button>
-            <Button asChild variant="outline">
-              <Link href="/table-tennis">View Bracket</Link>
-            </Button>
-            <Button asChild variant="outline">
-              <Link href="/table-tennis/groups">TT Groups</Link>
-            </Button>
-            <Button asChild variant="outline">
-              <Link href="/admin">⚽ FIFA</Link>
-            </Button>
-            <Button asChild variant="outline">
-              <Link href="/admin/dart">🎯 Dart</Link>
+            <Button asChild variant="outline" size="sm">
+              <Link href="/table-tennis">View Public</Link>
             </Button>
           </div>
         </div>

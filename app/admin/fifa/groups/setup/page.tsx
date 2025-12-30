@@ -137,14 +137,14 @@ export default function GroupSetupPage() {
             <p className="text-muted-foreground">Add and manage players in each group</p>
           </div>
           <div className="flex gap-2">
-            <Button onClick={initializeAllGroups} variant="outline" disabled={loading}>
+            <Button onClick={initializeAllGroups} variant="outline" disabled={loading} size="sm">
               Initialize Groups
             </Button>
-            <Button asChild variant="secondary">
-              <Link href="/admin/groups">Enter Matches</Link>
+            <Button asChild variant="secondary" size="sm">
+              <Link href="/admin/fifa/groups">Enter Matches</Link>
             </Button>
-            <Button asChild variant="outline">
-              <Link href="/groups">View Standings</Link>
+            <Button asChild variant="outline" size="sm">
+              <Link href="/fifa/groups">View Public</Link>
             </Button>
           </div>
         </div>
