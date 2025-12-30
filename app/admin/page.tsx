@@ -59,6 +59,9 @@ export default async function AdminPage() {
             <Button asChild variant="default">
               <Link href="/admin/groups">Group Stage</Link>
             </Button>
+            <Button asChild variant="default">
+              <Link href="/admin/dart">🎯 Dart Tournament</Link>
+            </Button>
             <Button asChild variant="secondary">
               <Link href="/admin/setup">Add Players</Link>
             </Button>

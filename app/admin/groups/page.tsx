@@ -149,6 +149,9 @@ export default function AdminGroupsPage() {
             <Button asChild variant="outline">
               <Link href="/admin">Knockout Admin</Link>
             </Button>
+            <Button asChild variant="outline">
+              <Link href="/admin/dart">🎯 Dart</Link>
+            </Button>
           </div>
         </div>
 

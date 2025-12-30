@@ -1,332 +1,221 @@
-"use client"
+import { getDartTournament } from "@/app/actions/dart-actions";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { Badge } from "@/components/ui/badge";
+import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
+import { Button } from "@/components/ui/button";
+import Link from "next/link";
 
-import { useState } from "react"
+export const revalidate = 5; // Revalidate every 5 seconds
 
-export default function DartScoreboard() {
-  const [rounds, setRounds] = useState([{ players: [] }])
-  const [activeRound, setActiveRound] = useState(0)
-  const [showPlayerModal, setShowPlayerModal] = useState(false)
-  const [showScoreModal, setShowScoreModal] = useState(null)
-  const [playerName, setPlayerName] = useState("")
-  const [tempScore, setTempScore] = useState(0)
-  const [audienceMode, setAudienceMode] = useState(false)
+export default async function DartScoreboardPage() {
+  const result = await getDartTournament();
 
-  const isLocked = (roundIndex) => roundIndex < rounds.length - 1
-
-  const currentPlayers = [...rounds[activeRound].players].sort(
-    (a, b) => b.score - a.score
-  )
-  const qualifyCount = Math.ceil(currentPlayers.length / 2)
-
-  const addPlayer = () => {
-    if (!playerName.trim()) return
-    const updated = [...rounds]
-    updated[0].players.push({ name: playerName, score: 0 })
-    setRounds(updated)
-    setPlayerName("")
+  if (!result.success || !result.data) {
+    return (
+      <div className="min-h-screen flex items-center justify-center p-4">
+        <div className="text-center max-w-md">
+          <h1 className="text-3xl font-bold mb-4 text-destructive">Error Loading Tournament</h1>
+          <p className="text-muted-foreground mb-6">{result.message}</p>
+          <div className="space-y-2 text-sm text-muted-foreground mb-6">
+            <p>Make sure:</p>
+            <ul className="list-disc list-inside text-left">
+              <li>MongoDB is running</li>
+              <li>Run: npm run seed-dart</li>
+            </ul>
+          </div>
+          <Button asChild>
+            <Link href="/admin/dart">Go to Admin</Link>
+          </Button>
+        </div>
+      </div>
+    );
   }
 
-  const saveScore = () => {
-    if (isLocked(activeRound)) return
-    const updated = [...rounds]
-    updated[activeRound].players[showScoreModal].score = tempScore
-    setRounds(updated)
-    setShowScoreModal(null)
-  }
-
-  const endRound = () => {
-    const qualified = currentPlayers.slice(0, qualifyCount)
-    setRounds([
-      ...rounds,
-      { players: qualified.map((p) => ({ ...p, score: 0 })) }
-    ])
-    setActiveRound(activeRound + 1)
-  }
+  const tournament = result.data;
+  const allRounds = [...tournament.rounds].sort((a, b) => a.roundNumber - b.roundNumber);
+  const currentRound = tournament.rounds.find((r) => r.roundNumber === tournament.currentRound);
 
   return (
-    <div style={audienceMode ? styles.pageAudience : styles.page}>
-      <h1 style={styles.title}>🎯 Dart Tournament Scoreboard</h1>
-
-      {/* Tabs */}
-      <div style={styles.tabs}>
-        {rounds.map((_, i) => (
-          <button
-            key={i}
-            onClick={() => setActiveRound(i)}
-            style={{
-              ...styles.tab,
-              background: i === activeRound ? "#16a34a" : "#020617"
-            }}>
-            Round {i + 1}
-          </button>
-        ))}
+    <div className="min-h-screen p-4 md:p-8">
+      {/* Header */}
+      <div className="max-w-7xl mx-auto mb-8">
+        <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-4 mb-4">
+          <div>
+            <h1 className="text-4xl md:text-5xl font-bold mb-2 bg-gradient-to-r from-primary via-secondary to-accent bg-clip-text text-transparent">
+              🎯 Dart Tournament
+            </h1>
+            <p className="text-xl text-muted-foreground">Kite Games Studio</p>
+          </div>
+          <div className="flex gap-2">
+            <Button asChild variant="outline">
+              <Link href="/">FIFA Bracket</Link>
+            </Button>
+            <Button asChild variant="outline">
+              <Link href="/groups">Group Stage</Link>
+            </Button>
+          </div>
+        </div>
+        <div className="h-[2px] bg-gradient-to-r from-transparent via-primary to-transparent" />
       </div>
 
-      {!audienceMode && activeRound === 0 && (
-        <button
-          style={styles.secondaryBtn}
-          onClick={() => setShowPlayerModal(true)}>
-          ➕ Add Players
-        </button>
-      )}
-
-      {!audienceMode && (
-        <button
-          style={styles.audienceBtn}
-          onClick={() => setAudienceMode(true)}>
-          📺 Audience Mode
-        </button>
-      )}
-
-      {/* Scoreboard */}
-      <div style={{ display: "flex", justifyContent: "center" }}>
-        <div style={styles.card}>
-          <table style={styles.table}>
-            <thead>
-              <tr>
-                <th>#</th>
-                <th>Player</th>
-                <th>Score</th>
-                <th></th>
-              </tr>
-            </thead>
-            <tbody>
-              {currentPlayers.map((p, i) => (
-                <tr
-                  key={i}
-                  style={{
-                    ...styles.row,
-                    ...(i === 0 ? styles.goldRow : {}),
-                    ...(i === 1 ? styles.silverRow : {}),
-                    ...(i === 2 ? styles.bronzeRow : {})
-                  }}>
-                  <td style={{ textAlign: "center" }}>
-                    {i === 0 ? <span style={styles.crown}>👑</span> : i + 1}
-                  </td>
-                  <td style={styles.playerCell}>{p.name}</td>
-                  <td style={styles.scoreCell}>{p.score}</td>
-                  <td>
-                    <button
-                      style={styles.iconBtn}
-                      onClick={() => {
-                        setTempScore(p.score)
-                        setShowScoreModal(i)
-                      }}>
-                      ✏️
-                    </button>
-                  </td>
-                </tr>
-              ))}
-            </tbody>
-          </table>
+      {/* Tournament Status */}
+      <div className="max-w-7xl mx-auto mb-8">
+        <div className="flex gap-4 flex-wrap items-center">
+          <Badge variant="outline" className="px-4 py-2 text-lg">
+            {tournament.isFinished ? "🏁 Tournament Finished" : `🎯 Round ${tournament.currentRound}`}
+          </Badge>
+          {currentRound && (
+            <>
+              <Badge variant="default" className="px-4 py-2">
+                {currentRound.players.length} Players
+              </Badge>
+              {!tournament.isFinished && currentRound.players.length > 3 && (
+                <Badge variant="secondary" className="px-4 py-2">
+                  Top {Math.ceil(currentRound.players.length / 2)} Qualify
+                </Badge>
+              )}
+            </>
+          )}
         </div>
       </div>
 
-      {!audienceMode && currentPlayers.length > 1 && (
-        <button style={styles.primaryBtn} onClick={endRound}>
-          End Round → Qualify Next Round
-        </button>
-      )}
-
-      {/* Player Modal */}
-      {showPlayerModal && (
-        <div style={styles.backdrop}>
-          <div style={styles.modal}>
-            <h2>Add Players (Round 1)</h2>
-            <div style={styles.modalRow}>
-              <input
-                style={styles.input}
-                value={playerName}
-                placeholder='Player name'
-                onChange={(e) => setPlayerName(e.target.value)}
-              />
-              <button style={styles.primaryBtn} onClick={addPlayer}>
-                Add
-              </button>
-            </div>
-            <ul style={styles.list}>
-              {rounds[0].players.map((p, i) => (
-                <li key={i}>{p.name}</li>
-              ))}
-            </ul>
-            <button
-              style={styles.secondaryBtn}
-              onClick={() => setShowPlayerModal(false)}>
-              Done
-            </button>
-          </div>
+      {/* Rounds Tabs */}
+      <div className="max-w-7xl mx-auto mb-8">
+        <div className="flex gap-2 flex-wrap">
+          {allRounds.map((round) => (
+            <a
+              key={round.roundNumber}
+              href={`#round-${round.roundNumber}`}
+              className={`px-4 py-2 rounded-full font-bold transition-all ${
+                round.roundNumber === tournament.currentRound
+                  ? "bg-primary text-primary-foreground"
+                  : round.isCompleted
+                  ? "bg-muted text-muted-foreground"
+                  : "bg-secondary text-secondary-foreground"
+              }`}
+            >
+              Round {round.roundNumber}
+            </a>
+          ))}
         </div>
-      )}
+      </div>
 
-      {/* Score Modal */}
-      {showScoreModal !== null && (
-        <div style={styles.backdrop}>
-          <div style={styles.modalSmall}>
-            <h3>Edit Score</h3>
-            <input
-              type='number'
-              style={styles.input}
-              value={tempScore}
-              onChange={(e) => setTempScore(Number(e.target.value))}
-            />
-            <div style={styles.modalActions}>
-              <button
-                style={styles.secondaryBtn}
-                onClick={() => setShowScoreModal(null)}>
-                Cancel
-              </button>
-              <button style={styles.primaryBtn} onClick={saveScore}>
-                Save
-              </button>
+      {/* Rounds Display */}
+      <div className="max-w-7xl mx-auto space-y-8">
+        {allRounds.map((round) => {
+          const sortedPlayers = [...round.players].sort((a, b) => b.score - a.score);
+          const qualifyCount = Math.ceil(round.players.length / 2);
+          const qualifyThreshold = sortedPlayers[qualifyCount - 1]?.score || 0;
+
+          return (
+            <div key={round.roundNumber} id={`round-${round.roundNumber}`}>
+              <Card className="border-2 border-primary/20">
+                <CardHeader>
+                  <div className="flex justify-between items-center">
+                    <CardTitle className="text-3xl font-bold flex items-center gap-3">
+                      Round {round.roundNumber}
+                      {round.isCompleted && (
+                        <Badge variant="outline" className="text-sm">
+                          Completed
+                        </Badge>
+                      )}
+                      {round.isActive && !round.isCompleted && (
+                        <Badge variant="default" className="text-sm animate-pulse">
+                          Active
+                        </Badge>
+                      )}
+                    </CardTitle>
+                    <div className="text-sm text-muted-foreground">
+                      {round.players.length} Player{round.players.length !== 1 ? "s" : ""}
+                    </div>
+                  </div>
+                </CardHeader>
+                <CardContent>
+                  {round.players.length === 0 ? (
+                    <div className="text-center py-8 text-muted-foreground">
+                      No players yet
+                    </div>
+                  ) : (
+                    <Table>
+                      <TableHeader>
+                        <TableRow>
+                          <TableHead className="w-16 text-center">Rank</TableHead>
+                          <TableHead>Player</TableHead>
+                          <TableHead className="text-center w-32">Score</TableHead>
+                          <TableHead className="text-center w-24">Status</TableHead>
+                        </TableRow>
+                      </TableHeader>
+                      <TableBody>
+                        {sortedPlayers.map((player, index) => {
+                          const isQualified = round.isCompleted && player.score >= qualifyThreshold;
+                          const isEliminated = round.isCompleted && !isQualified;
+                          const isTop3 = index < 3;
+
+                          return (
+                            <TableRow
+                              key={player.name}
+                              className={`${
+                                isQualified
+                                  ? "bg-primary/10 border-l-4 border-primary"
+                                  : isEliminated
+                                  ? "opacity-50"
+                                  : ""
+                              } ${isTop3 && round.isCompleted ? "font-bold" : ""}`}
+                            >
+                              <TableCell className="text-center font-mono text-lg">
+                                {index === 0 && round.isCompleted ? (
+                                  <span className="text-2xl">👑</span>
+                                ) : index === 1 && round.isCompleted ? (
+                                  <span className="text-2xl">🥈</span>
+                                ) : index === 2 && round.isCompleted ? (
+                                  <span className="text-2xl">🥉</span>
+                                ) : (
+                                  index + 1
+                                )}
+                              </TableCell>
+                              <TableCell className="font-medium text-lg">
+                                {player.name}
+                              </TableCell>
+                              <TableCell className="text-center">
+                                <span className="text-2xl font-bold text-primary">
+                                  {player.score}
+                                </span>
+                              </TableCell>
+                              <TableCell className="text-center">
+                                {round.isCompleted ? (
+                                  isQualified ? (
+                                    <Badge variant="default" className="bg-primary">
+                                      ✓ Qualified
+                                    </Badge>
+                                  ) : (
+                                    <Badge variant="outline">Eliminated</Badge>
+                                  )
+                                ) : (
+                                  <Badge variant="secondary">Playing</Badge>
+                                )}
+                              </TableCell>
+                            </TableRow>
+                          );
+                        })}
+                      </TableBody>
+                    </Table>
+                  )}
+                </CardContent>
+              </Card>
             </div>
-          </div>
+          );
+        })}
+      </div>
+
+      {/* Footer Info */}
+      {tournament.isFinished && (
+        <div className="max-w-7xl mx-auto mt-12 p-6 bg-card rounded-lg border border-primary">
+          <h3 className="font-bold text-xl mb-2 text-primary">🏆 Tournament Complete!</h3>
+          <p className="text-muted-foreground">
+            Congratulations to all participants! View the final standings above.
+          </p>
         </div>
       )}
     </div>
-  )
-}
-
-const styles = {
-  crown: {
-    display: "inline-block",
-    fontSize: 26,
-    animation: "crownBounce 1.2s infinite ease-in-out"
-  },
-  goldRow: {
-    boxShadow: "0 0 18px rgba(255,215,0,0.6)",
-    background: "linear-gradient(90deg, rgba(255,215,0,0.15), rgba(2,6,23,0.9))"
-  },
-  silverRow: {
-    boxShadow: "0 0 14px rgba(192,192,192,0.5)",
-    background:
-      "linear-gradient(90deg, rgba(192,192,192,0.12), rgba(2,6,23,0.9))"
-  },
-  bronzeRow: {
-    boxShadow: "0 0 14px rgba(205,127,50,0.5)",
-    background:
-      "linear-gradient(90deg, rgba(205,127,50,0.12), rgba(2,6,23,0.9))"
-  },
-  page: {
-    minHeight: "100vh",
-    background: "linear-gradient(135deg, #f5f1e8, #e7dfcf)",
-    padding: 40
-  },
-  pageAudience: {
-    minHeight: "100vh",
-    background: "#020617",
-    padding: 40
-  },
-  title: {
-    fontSize: 36,
-    fontWeight: 900,
-    textAlign: "center",
-    marginBottom: 20
-  },
-  tabs: {
-    display: "flex",
-    justifyContent: "center",
-    gap: 10,
-    marginBottom: 20
-  },
-  tab: {
-    padding: "8px 16px",
-    borderRadius: 999,
-    border: "none",
-    color: "#fff",
-    cursor: "pointer"
-  },
-  card: {
-    background: "#020617",
-    borderRadius: 24,
-    padding: 24,
-    maxWidth: 800,
-    width: "100%"
-  },
-  table: { width: "100%", borderCollapse: "separate", borderSpacing: "0 12px" },
-  row: {
-    background: "#020617",
-    borderRadius: 16,
-    transition: "transform 0.3s ease"
-  },
-  gold: { boxShadow: "0 0 20px rgba(255,215,0,0.8)" },
-  silver: { boxShadow: "0 0 20px rgba(192,192,192,0.7)" },
-  bronze: { boxShadow: "0 0 20px rgba(205,127,50,0.7)" },
-  qualified: { outline: "2px solid #22c55e" },
-  eliminated: { opacity: 0.5 },
-  playerCell: { fontWeight: 700, color: "#f9fafb", padding: 16 },
-  scoreCell: {
-    fontSize: 24,
-    fontWeight: 900,
-    color: "#22c55e",
-    textAlign: "center"
-  },
-  iconBtn: {
-    background: "transparent",
-    border: "none",
-    fontSize: 18,
-    cursor: "pointer",
-    color: "#fff"
-  },
-  primaryBtn: {
-    marginTop: 20,
-    padding: "14px 24px",
-    borderRadius: 16,
-    background: "#16a34a",
-    border: "none",
-    fontWeight: 800
-  },
-  secondaryBtn: {
-    marginTop: 10,
-    padding: "10px 18px",
-    borderRadius: 14,
-    background: "#1f2937",
-    color: "#fff",
-    border: "none"
-  },
-  audienceBtn: {
-    marginLeft: 10,
-    padding: "10px 18px",
-    borderRadius: 14,
-    background: "#0f172a",
-    color: "#fff",
-    border: "none"
-  },
-  backdrop: {
-    position: "fixed",
-    inset: 0,
-    background: "rgba(0,0,0,0.7)",
-    display: "flex",
-    justifyContent: "center",
-    alignItems: "center"
-  },
-  modal: {
-    background: "#020617",
-    padding: 30,
-    borderRadius: 24,
-    width: 420,
-    color: "#fff"
-  },
-  modalSmall: {
-    background: "#020617",
-    padding: 24,
-    borderRadius: 20,
-    width: 300,
-    color: "#fff"
-  },
-  modalRow: { display: "flex", gap: 10 },
-  modalActions: {
-    display: "flex",
-    justifyContent: "flex-end",
-    gap: 10,
-    marginTop: 20
-  },
-  input: {
-    flex: 1,
-    padding: 12,
-    borderRadius: 10,
-    background: "#020617",
-    border: "1px solid #334155",
-    color: "#fff"
-  },
-  list: { marginTop: 15, color: "#fff" }
+  );
 }

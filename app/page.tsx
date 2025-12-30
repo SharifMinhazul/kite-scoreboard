@@ -30,9 +30,15 @@ export default async function Home() {
   return (
     <div>
       {/* Navigation */}
-      <div className="fixed top-4 right-4 z-50">
+      <div className="fixed top-4 right-4 z-50 flex gap-2">
         <Button asChild variant="outline">
-          <Link href="/admin">Admin Dashboard</Link>
+          <Link href="/groups">Groups</Link>
+        </Button>
+        <Button asChild variant="outline">
+          <Link href="/dart">🎯 Dart</Link>
+        </Button>
+        <Button asChild variant="outline">
+          <Link href="/admin">Admin</Link>
         </Button>
       </div>
 
