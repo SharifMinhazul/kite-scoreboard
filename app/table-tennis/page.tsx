@@ -36,13 +36,10 @@ export default async function TableTennisPage() {
       {/* Navigation */}
       <div className="fixed top-4 right-4 z-50 flex gap-2">
         <Button asChild variant="outline" size="sm">
+          <Link href="/">Home</Link>
+        </Button>
+        <Button asChild variant="outline" size="sm">
           <Link href="/table-tennis/groups">Groups</Link>
-        </Button>
-        <Button asChild variant="outline" size="sm">
-          <Link href="/">⚽ FIFA</Link>
-        </Button>
-        <Button asChild variant="outline" size="sm">
-          <Link href="/dart">🎯 Dart</Link>
         </Button>
         <Button asChild variant="secondary" size="sm">
           <Link href="/admin/table-tennis">Admin</Link>

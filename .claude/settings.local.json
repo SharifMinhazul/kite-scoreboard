@@ -14,7 +14,8 @@
       "Bash(npm run build:*)",
       "Bash(npm run seed-dart:*)",
       "Bash(npm run seed-table-tennis:*)",
-      "Bash(npm run seed-tt-groups:*)"
+      "Bash(npm run seed-tt-groups:*)",
+      "Bash(openssl rand:*)"
     ]
   }
 }

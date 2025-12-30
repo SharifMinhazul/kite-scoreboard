@@ -52,11 +52,14 @@ export default async function TTGroupsPage() {
             <p className="text-xl text-muted-foreground">Kite Games Studio</p>
           </div>
           <div className="flex gap-2">
-            <Button asChild variant="outline">
-              <Link href="/admin/table-tennis/groups">Admin Panel</Link>
+            <Button asChild variant="outline" size="sm">
+              <Link href="/">Home</Link>
             </Button>
-            <Button asChild variant="secondary">
+            <Button asChild variant="secondary" size="sm">
               <Link href="/table-tennis">Knockout Bracket</Link>
+            </Button>
+            <Button asChild variant="outline" size="sm">
+              <Link href="/admin/table-tennis/groups">Admin</Link>
             </Button>
           </div>
         </div>

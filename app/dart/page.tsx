@@ -47,14 +47,11 @@ export default async function DartScoreboardPage() {
             <p className="text-xl text-muted-foreground">Kite Games Studio</p>
           </div>
           <div className="flex gap-2">
-            <Button asChild variant="outline">
-              <Link href="/">FIFA Bracket</Link>
+            <Button asChild variant="outline" size="sm">
+              <Link href="/">Home</Link>
             </Button>
-            <Button asChild variant="outline">
-              <Link href="/groups">Group Stage</Link>
-            </Button>
-            <Button asChild variant="outline">
-              <Link href="/table-tennis">🏓 TT</Link>
+            <Button asChild variant="secondary" size="sm">
+              <Link href="/admin/dart">Admin</Link>
             </Button>
           </div>
         </div>

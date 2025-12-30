@@ -52,17 +52,14 @@ export default async function GroupsPage() {
             <p className="text-xl text-muted-foreground">FIFA Tournament - Kite Games Studio</p>
           </div>
           <div className="flex gap-2">
-            <Button asChild variant="outline">
-              <Link href="/admin/groups">Admin Panel</Link>
+            <Button asChild variant="outline" size="sm">
+              <Link href="/">Home</Link>
             </Button>
-            <Button asChild variant="secondary">
-              <Link href="/">Knockout Bracket</Link>
+            <Button asChild variant="secondary" size="sm">
+              <Link href="/fifa">Knockout Bracket</Link>
             </Button>
-            <Button asChild variant="outline">
-              <Link href="/table-tennis/groups">🏓 TT Groups</Link>
-            </Button>
-            <Button asChild variant="outline">
-              <Link href="/dart">🎯 Dart</Link>
+            <Button asChild variant="outline" size="sm">
+              <Link href="/admin/fifa/groups">Admin</Link>
             </Button>
           </div>
         </div>

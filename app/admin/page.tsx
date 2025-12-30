@@ -1,159 +1,144 @@
-import { getAllMatches } from "@/app/actions/match-actions";
-import { ScoreInput } from "@/components/admin/ScoreInput";
-import { MatchTable } from "@/components/admin/MatchTable";
+import { auth, signOut } from "@/auth";
 import Link from "next/link";
 import { Button } from "@/components/ui/button";
-import { Badge } from "@/components/ui/badge";
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
+import { Trophy, Target, Table2, LogOut } from "lucide-react";
 
-export const revalidate = 0; // Always fetch fresh data for admin
+export default async function AdminDashboard() {
+  const session = await auth();
 
-export default async function AdminPage() {
-  const result = await getAllMatches();
-
-  if (!result.success || !result.data) {
-    return (
-      <div className="min-h-screen flex items-center justify-center p-4">
-        <div className="text-center max-w-md">
-          <h1 className="text-3xl font-bold mb-4 text-destructive">Error Loading Matches</h1>
-          <p className="text-muted-foreground mb-6">{result.message}</p>
-          <div className="space-y-2 text-sm text-muted-foreground mb-6">
-            <p>Make sure:</p>
-            <ul className="list-disc list-inside text-left">
-              <li>MongoDB is running locally or Atlas is configured</li>
-              <li>The database has been seeded with `npm run seed`</li>
-              <li>Environment variables are set correctly in `.env.local`</li>
-            </ul>
-          </div>
-          <Button asChild>
-            <Link href="/">Back to Bracket View</Link>
-          </Button>
-        </div>
-      </div>
-    );
-  }
-
-  const matches = result.data;
-
-  // Group matches by round
-  const r16Matches = matches.filter((m) => m.round === "R16");
-  const qfMatches = matches.filter((m) => m.round === "QF");
-  const sfMatches = matches.filter((m) => m.round === "SF");
-  const finalMatches = matches.filter((m) => m.round === "Final");
-
-  // Stats
-  const completedCount = matches.filter((m) => m.status === "completed").length;
-  const liveCount = matches.filter((m) => m.status === "live").length;
-  const scheduledCount = matches.filter((m) => m.status === "scheduled").length;
+  const games = [
+    {
+      title: "FIFA Tournament",
+      icon: Trophy,
+      description: "Manage knockout bracket and group stage",
+      color: "from-green-500 to-emerald-600",
+      knockoutHref: "/admin/fifa",
+      groupsHref: "/admin/fifa/groups",
+      publicHref: "/fifa",
+    },
+    {
+      title: "Dart Tournament",
+      icon: Target,
+      description: "Manage rounds and player scores",
+      color: "from-red-500 to-orange-600",
+      knockoutHref: "/admin/dart",
+      publicHref: "/dart",
+    },
+    {
+      title: "Table Tennis",
+      icon: Table2,
+      description: "Manage knockout bracket and group stage",
+      color: "from-blue-500 to-cyan-600",
+      knockoutHref: "/admin/table-tennis",
+      groupsHref: "/admin/table-tennis/groups",
+      publicHref: "/table-tennis",
+    },
+  ];
 
   return (
-    <div className="min-h-screen p-4 md:p-8">
-      {/* Header */}
-      <div className="max-w-7xl mx-auto mb-8">
-        <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-4 mb-4">
-          <div>
-            <h1 className="text-3xl md:text-4xl font-bold mb-2">Admin Dashboard</h1>
-            <p className="text-muted-foreground">Manage tournament matches and scores</p>
-          </div>
-          <div className="flex gap-2 flex-wrap">
-            <Button asChild variant="default">
-              <Link href="/admin/groups">Group Stage</Link>
-            </Button>
-            <Button asChild variant="default">
-              <Link href="/admin/dart">🎯 Dart</Link>
-            </Button>
-            <Button asChild variant="default">
-              <Link href="/admin/table-tennis">🏓 Table Tennis</Link>
-            </Button>
-            <Button asChild variant="secondary">
-              <Link href="/admin/setup">Add Players</Link>
-            </Button>
-            <Button asChild variant="outline">
-              <Link href="/">View Bracket</Link>
-            </Button>
-          </div>
-        </div>
-
-        {/* Stats */}
-        <div className="flex gap-4 flex-wrap">
-          <Badge variant="outline" className="px-4 py-2">
-            Total: {matches.length}
-          </Badge>
-          <Badge variant="default" className="px-4 py-2">
-            Completed: {completedCount}
-          </Badge>
-          <Badge variant="destructive" className="px-4 py-2">
-            Live: {liveCount}
-          </Badge>
-          <Badge variant="secondary" className="px-4 py-2">
-            Scheduled: {scheduledCount}
-          </Badge>
-        </div>
+    <div className="min-h-screen">
+      {/* Navigation */}
+      <div className="fixed top-4 right-4 z-50 flex gap-2">
+        <Button asChild variant="outline" size="sm">
+          <Link href="/">View Public</Link>
+        </Button>
+        <form
+          action={async () => {
+            "use server";
+            await signOut({ redirectTo: "/" });
+          }}
+        >
+          <Button type="submit" variant="destructive" size="sm">
+            <LogOut className="w-4 h-4 mr-2" />
+            Logout
+          </Button>
+        </form>
       </div>
 
-      {/* Match Input Grids by Round */}
-      <div className="max-w-7xl mx-auto space-y-8">
-        {/* Round of 16 */}
-        {r16Matches.length > 0 && (
-          <section>
-            <h2 className="text-2xl font-bold mb-4 flex items-center gap-2">
-              Round of 16
-              <Badge variant="outline">{r16Matches.length} matches</Badge>
-            </h2>
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4">
-              {r16Matches.map((match) => (
-                <ScoreInput key={match.id} match={match} />
-              ))}
-            </div>
-          </section>
-        )}
+      {/* Hero Section */}
+      <div className="container mx-auto px-4 py-16 md:py-24">
+        <div className="text-center mb-16">
+          <h1 className="text-5xl md:text-7xl font-bold mb-4 bg-gradient-to-r from-primary via-secondary to-accent bg-clip-text text-transparent">
+            Admin Dashboard
+          </h1>
+          <p className="text-xl md:text-2xl text-muted-foreground mb-2">
+            Kite Games Studio Tournament Management
+          </p>
+          <div className="mt-2 text-sm text-muted-foreground">
+            Welcome, <strong>{session?.user?.name}</strong>
+          </div>
+          <div className="mt-6 h-[2px] w-64 mx-auto bg-gradient-to-r from-transparent via-primary to-transparent" />
+        </div>
 
-        {/* Quarter Finals */}
-        {qfMatches.length > 0 && (
-          <section>
-            <h2 className="text-2xl font-bold mb-4 flex items-center gap-2">
-              Quarter Finals
-              <Badge variant="outline">{qfMatches.length} matches</Badge>
-            </h2>
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
-              {qfMatches.map((match) => (
-                <ScoreInput key={match.id} match={match} />
-              ))}
-            </div>
-          </section>
-        )}
+        {/* Games Grid */}
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 max-w-6xl mx-auto">
+          {games.map((game) => {
+            const Icon = game.icon;
+            return (
+              <Card
+                key={game.title}
+                className="border-2 hover:border-primary transition-all duration-300 hover:shadow-lg group"
+              >
+                <CardHeader>
+                  <div className={`w-16 h-16 rounded-lg bg-gradient-to-br ${game.color} flex items-center justify-center mb-4 group-hover:scale-110 transition-transform`}>
+                    <Icon className="w-8 h-8 text-white" />
+                  </div>
+                  <CardTitle className="text-2xl">{game.title}</CardTitle>
+                  <CardDescription className="text-base">
+                    {game.description}
+                  </CardDescription>
+                </CardHeader>
+                <CardContent className="space-y-2">
+                  <Button asChild className="w-full" size="lg">
+                    <Link href={game.knockoutHref}>Manage Knockout</Link>
+                  </Button>
+                  {game.groupsHref && (
+                    <Button asChild variant="secondary" className="w-full">
+                      <Link href={game.groupsHref}>Manage Groups</Link>
+                    </Button>
+                  )}
+                  <Button asChild variant="outline" className="w-full" size="sm">
+                    <Link href={game.publicHref}>View Public →</Link>
+                  </Button>
+                </CardContent>
+              </Card>
+            );
+          })}
+        </div>
 
-        {/* Semi Finals */}
-        {sfMatches.length > 0 && (
-          <section>
-            <h2 className="text-2xl font-bold mb-4 flex items-center gap-2">
-              Semi Finals
-              <Badge variant="outline">{sfMatches.length} matches</Badge>
-            </h2>
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
-              {sfMatches.map((match) => (
-                <ScoreInput key={match.id} match={match} />
-              ))}
-            </div>
-          </section>
-        )}
-
-        {/* Final */}
-        {finalMatches.length > 0 && (
-          <section>
-            <h2 className="text-2xl font-bold mb-4">🏆 Final</h2>
-            <div className="grid grid-cols-1 max-w-md">
-              {finalMatches.map((match) => (
-                <ScoreInput key={match.id} match={match} />
-              ))}
-            </div>
-          </section>
-        )}
-
-        {/* Table View */}
-        <section>
-          <h2 className="text-2xl font-bold mb-4">All Matches (Table View)</h2>
-          <MatchTable matches={matches} />
-        </section>
+        {/* Quick Stats */}
+        <div className="mt-16 max-w-4xl mx-auto">
+          <h2 className="text-2xl font-bold mb-6 text-center">Quick Actions</h2>
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+            <Card>
+              <CardHeader>
+                <CardTitle className="text-lg">Tournament Setup</CardTitle>
+              </CardHeader>
+              <CardContent className="space-y-2">
+                <Button asChild variant="outline" className="w-full justify-start" size="sm">
+                  <Link href="/admin/fifa/setup">FIFA - Add Players</Link>
+                </Button>
+                <Button asChild variant="outline" className="w-full justify-start" size="sm">
+                  <Link href="/admin/table-tennis/setup">Table Tennis - Add Players</Link>
+                </Button>
+              </CardContent>
+            </Card>
+            <Card>
+              <CardHeader>
+                <CardTitle className="text-lg">Group Stage</CardTitle>
+              </CardHeader>
+              <CardContent className="space-y-2">
+                <Button asChild variant="outline" className="w-full justify-start" size="sm">
+                  <Link href="/admin/fifa/groups/setup">FIFA - Distribute Groups</Link>
+                </Button>
+                <Button asChild variant="outline" className="w-full justify-start" size="sm">
+                  <Link href="/admin/table-tennis/groups/setup">TT - Distribute Groups</Link>
+                </Button>
+              </CardContent>
+            </Card>
+          </div>
+        </div>
       </div>
     </div>
   );
