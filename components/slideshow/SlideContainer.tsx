@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import { cn } from '@/lib/utils';
 
 interface SlideContainerProps {
@@ -12,11 +12,19 @@ interface SlideContainerProps {
 export function SlideContainer({ url, isActive, title }: SlideContainerProps) {
   const [isLoading, setIsLoading] = useState(true);
   const [hasError, setHasError] = useState(false);
+  const iframeRef = useRef<HTMLIFrameElement>(null);
 
   useEffect(() => {
     if (isActive) {
       setIsLoading(true);
       setHasError(false);
+
+      // Set a timeout to hide loading after 2 seconds as a fallback
+      const timeout = setTimeout(() => {
+        setIsLoading(false);
+      }, 2000);
+
+      return () => clearTimeout(timeout);
     }
   }, [isActive, url]);
 
@@ -33,7 +41,7 @@ export function SlideContainer({ url, isActive, title }: SlideContainerProps) {
     <div
       className={cn(
         'absolute inset-0 transition-opacity duration-500',
-        isActive ? 'opacity-100 z-10' : 'opacity-0 z-0'
+        isActive ? 'opacity-100 z-10' : 'opacity-0 z-0 pointer-events-none'
       )}
     >
       {/* Loading state */}
@@ -64,11 +72,13 @@ export function SlideContainer({ url, isActive, title }: SlideContainerProps) {
 
       {/* Iframe content */}
       <iframe
+        ref={iframeRef}
         src={`${url}?slideshow=true`}
         className="w-full h-full border-0"
         onLoad={handleLoad}
         onError={handleError}
         title={title}
+        allow="fullscreen"
       />
     </div>
   );
