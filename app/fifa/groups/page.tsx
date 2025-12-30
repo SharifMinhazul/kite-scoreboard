@@ -42,12 +42,8 @@ export default async function GroupsPage({
     );
   }
 
-  // Split groups into 2 rows of 4
-  const row1Groups = groups.slice(0, 4); // Groups A, B, C, D
-  const row2Groups = groups.slice(4, 8); // Groups E, F, G, H
-
   return (
-    <div className="min-h-screen p-4 md:p-8 relative overflow-hidden">
+    <div className={`min-h-screen relative overflow-hidden ${isSlideshow ? 'p-4 flex flex-col' : 'p-4 md:p-8'}`}>
       {/* Corner accent bars */}
       <div className="fixed top-0 left-0 w-2 h-32 bg-gradient-to-b from-primary to-transparent z-50"></div>
       <div className="fixed top-0 right-0 w-32 h-2 bg-gradient-to-l from-accent to-transparent z-50"></div>
@@ -68,67 +64,94 @@ export default async function GroupsPage({
       )}
 
       {/* Header */}
-      <div className="max-w-7xl mx-auto mb-8 broadcast-title">
-        <div className="text-center mb-6">
-          <div className="inline-block mb-4">
-            <div className="text-xs font-display tracking-[0.3em] text-primary mb-2">GROUP STAGE • ROUND ROBIN</div>
+      <div className={`max-w-7xl mx-auto broadcast-title ${isSlideshow ? 'mb-4' : 'mb-8'}`}>
+        <div className={`text-center ${isSlideshow ? 'mb-3' : 'mb-6'}`}>
+          <div className={`inline-block ${isSlideshow ? 'mb-2' : 'mb-4'}`}>
+            <div className={`font-display tracking-[0.3em] text-primary ${isSlideshow ? 'text-[8px] mb-1' : 'text-xs mb-2'}`}>GROUP STAGE • ROUND ROBIN</div>
             <div className="h-px bg-gradient-to-r from-transparent via-primary to-transparent"></div>
           </div>
 
-          <h1 className="text-5xl md:text-7xl lg:text-8xl font-bold mb-3 leading-none">
+          <h1 className={`font-bold leading-none ${isSlideshow ? 'text-3xl md:text-4xl mb-2' : 'text-5xl md:text-7xl lg:text-8xl mb-3'}`}>
             <span className="block text-transparent bg-clip-text bg-gradient-to-r from-primary via-secondary to-accent">
               FIFA WORLD CUP
             </span>
-            <span className="block text-foreground mt-1">
+            <span className={`block text-foreground ${isSlideshow ? 'mt-0.5' : 'mt-1'}`}>
               GROUP STANDINGS
             </span>
           </h1>
 
-          <div className="flex items-center justify-center gap-4 mt-6">
-            <div className="h-px w-12 bg-primary"></div>
-            <div className="electric-pulse w-3 h-3 bg-primary rounded-full"></div>
-            <p className="text-[10px] font-display tracking-widest text-muted-foreground">
-              KITE GAMES STUDIO
-            </p>
-            <div className="electric-pulse w-3 h-3 bg-primary rounded-full"></div>
-            <div className="h-px w-12 bg-primary"></div>
-          </div>
+          {!isSlideshow && (
+            <div className="flex items-center justify-center gap-4 mt-6">
+              <div className="h-px w-12 bg-primary"></div>
+              <div className="electric-pulse w-3 h-3 bg-primary rounded-full"></div>
+              <p className="text-[10px] font-display tracking-widest text-muted-foreground">
+                KITE GAMES STUDIO
+              </p>
+              <div className="electric-pulse w-3 h-3 bg-primary rounded-full"></div>
+              <div className="h-px w-12 bg-primary"></div>
+            </div>
+          )}
         </div>
         <div className="h-[2px] bg-gradient-to-r from-transparent via-primary to-transparent" />
       </div>
 
       {/* Groups Grid */}
-      <div className="max-w-[1600px] mx-auto space-y-8">
-        {/* Row 1: Groups A, B, C */}
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-          {groups.slice(0, 3).map((group, index) => (
-            <div key={group.name} className={`broadcast-wipe stagger-${index + 1}`}>
-              <GroupStandingsCard group={group} />
-            </div>
-          ))}
-        </div>
+      {isSlideshow ? (
+        // Slideshow mode: 4x2 grid to show all 8 groups without scrolling
+        <div className="flex-1 flex flex-col justify-center w-full px-6 space-y-8">
+          {/* Row 1: Groups A, B, C, D */}
+          <div className="grid grid-cols-4 gap-6">
+            {groups.slice(0, 4).map((group) => (
+              <div key={group.name} className="broadcast-wipe">
+                <GroupStandingsCard group={group} isSlideshow={isSlideshow} />
+              </div>
+            ))}
+          </div>
 
-        {/* Row 2: Groups D, E, F */}
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-          {groups.slice(3, 6).map((group, index) => (
-            <div key={group.name} className={`broadcast-wipe stagger-${index + 1}`}>
-              <GroupStandingsCard group={group} />
-            </div>
-          ))}
+          {/* Row 2: Groups E, F, G, H */}
+          <div className="grid grid-cols-4 gap-6">
+            {groups.slice(4, 8).map((group) => (
+              <div key={group.name} className="broadcast-wipe">
+                <GroupStandingsCard group={group} isSlideshow={isSlideshow} />
+              </div>
+            ))}
+          </div>
         </div>
+      ) : (
+        // Normal mode: 3-3-2 grid
+        <div className="max-w-[1600px] mx-auto space-y-8">
+          {/* Row 1: Groups A, B, C */}
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+            {groups.slice(0, 3).map((group, index) => (
+              <div key={group.name} className={`broadcast-wipe stagger-${index + 1}`}>
+                <GroupStandingsCard group={group} isSlideshow={isSlideshow} />
+              </div>
+            ))}
+          </div>
 
-        {/* Row 3: Groups G, H */}
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-          {groups.slice(6, 8).map((group, index) => (
-            <div key={group.name} className={`broadcast-wipe stagger-${index + 1}`}>
-              <GroupStandingsCard group={group} />
-            </div>
-          ))}
+          {/* Row 2: Groups D, E, F */}
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+            {groups.slice(3, 6).map((group, index) => (
+              <div key={group.name} className={`broadcast-wipe stagger-${index + 1}`}>
+                <GroupStandingsCard group={group} isSlideshow={isSlideshow} />
+              </div>
+            ))}
+          </div>
+
+          {/* Row 3: Groups G, H */}
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+            {groups.slice(6, 8).map((group, index) => (
+              <div key={group.name} className={`broadcast-wipe stagger-${index + 1}`}>
+                <GroupStandingsCard group={group} isSlideshow={isSlideshow} />
+              </div>
+            ))}
+          </div>
         </div>
-      </div>
+      )}
 
       {/* Legend */}
-      <div className="max-w-7xl mx-auto mt-12 p-8 bg-card/50 backdrop-blur-sm stripe-pattern border-2 border-primary/30 relative overflow-hidden">
+      {!isSlideshow && (
+        <div className="max-w-7xl mx-auto mt-12 p-8 bg-card/50 backdrop-blur-sm stripe-pattern border-2 border-primary/30 relative overflow-hidden">
         <div className="absolute top-0 left-0 right-0 h-1 bg-primary"></div>
 
         <h3 className="font-bold text-xl mb-6 font-display tracking-wider text-transparent bg-clip-text bg-gradient-to-r from-primary to-accent">
@@ -152,12 +175,13 @@ export default async function GroupsPage({
             <span className="text-primary font-bold">TIEBREAKER:</span> <span className="text-muted-foreground">POINTS → GD → GF</span>
           </div>
         </div>
-      </div>
+        </div>
+      )}
     </div>
   );
 }
 
-function GroupStandingsCard({ group }: { group: IGroup }) {
+function GroupStandingsCard({ group, isSlideshow = false }: { group: IGroup; isSlideshow?: boolean }) {
   // Calculate standings using the model method
   const standings = [...group.players].sort((a, b) => {
     if (b.points !== a.points) return b.points - a.points;
@@ -176,15 +200,15 @@ function GroupStandingsCard({ group }: { group: IGroup }) {
       {/* Accent bar */}
       <div className="absolute top-0 left-0 right-0 h-1 bg-primary"></div>
       {/* Corner decoration */}
-      <div className="absolute bottom-0 right-0 w-12 h-12 border-t-2 border-l-2 border-primary/20"></div>
+      {!isSlideshow && <div className="absolute bottom-0 right-0 w-12 h-12 border-t-2 border-l-2 border-primary/20"></div>}
 
-      <CardHeader className="pb-3">
-        <CardTitle className="text-center text-2xl font-bold flex items-center justify-center gap-2">
+      <CardHeader className={isSlideshow ? "pb-3 pt-4 px-4" : "pb-3"}>
+        <CardTitle className={`text-center font-bold flex items-center justify-center gap-2 ${isSlideshow ? 'text-2xl' : 'text-2xl'}`}>
           <span className="text-transparent bg-clip-text bg-gradient-to-r from-primary to-accent">
             GROUP {group.name}
           </span>
           {hasTie && (
-            <Badge variant="destructive" className="text-[10px] font-display electric-pulse">TIE</Badge>
+            <Badge variant="destructive" className="text-[8px] font-display electric-pulse">TIE</Badge>
           )}
         </CardTitle>
       </CardHeader>
@@ -192,12 +216,12 @@ function GroupStandingsCard({ group }: { group: IGroup }) {
         <Table>
           <TableHeader>
             <TableRow>
-              <TableHead className="w-12 text-center">#</TableHead>
-              <TableHead>Player</TableHead>
-              <TableHead className="text-center w-12">W</TableHead>
-              <TableHead className="text-center w-12">L</TableHead>
-              <TableHead className="text-center w-12">GD</TableHead>
-              <TableHead className="text-center w-16">Pts</TableHead>
+              <TableHead className={`text-center ${isSlideshow ? 'w-10 text-sm py-3' : 'w-12'}`}>#</TableHead>
+              <TableHead className={isSlideshow ? 'text-sm py-3' : ''}>Player</TableHead>
+              <TableHead className={`text-center ${isSlideshow ? 'w-10 text-sm py-3' : 'w-12'}`}>W</TableHead>
+              <TableHead className={`text-center ${isSlideshow ? 'w-10 text-sm py-3' : 'w-12'}`}>L</TableHead>
+              <TableHead className={`text-center ${isSlideshow ? 'w-10 text-sm py-3' : 'w-12'}`}>GD</TableHead>
+              <TableHead className={`text-center ${isSlideshow ? 'w-12 text-sm py-3' : 'w-16'}`}>Pts</TableHead>
             </TableRow>
           </TableHeader>
           <TableBody>
@@ -206,27 +230,27 @@ function GroupStandingsCard({ group }: { group: IGroup }) {
                 key={player.name}
                 className={index < 2 ? "bg-primary/10 font-bold" : ""}
               >
-                <TableCell className="text-center font-mono">
+                <TableCell className={`text-center font-mono ${isSlideshow ? 'text-sm py-3 px-3' : ''}`}>
                   {index + 1}
                 </TableCell>
-                <TableCell className="font-medium truncate">
+                <TableCell className={`font-medium truncate ${isSlideshow ? 'text-sm py-3 px-3' : ''}`}>
                   {player.name}
                   {index < 2 && (
-                    <Badge variant="default" className="ml-2 text-[10px] bg-primary">
+                    <Badge variant="default" className={`ml-1 bg-primary ${isSlideshow ? 'text-[10px] px-1.5' : 'text-[10px]'}`}>
                       Q
                     </Badge>
                   )}
                 </TableCell>
-                <TableCell className="text-center text-sm">
+                <TableCell className={`text-center ${isSlideshow ? 'text-sm py-3 px-3' : 'text-sm'}`}>
                   {player.wins}
                 </TableCell>
-                <TableCell className="text-center text-sm">
+                <TableCell className={`text-center ${isSlideshow ? 'text-sm py-3 px-3' : 'text-sm'}`}>
                   {player.losses}
                 </TableCell>
-                <TableCell className="text-center text-sm">
+                <TableCell className={`text-center ${isSlideshow ? 'text-sm py-3 px-3' : 'text-sm'}`}>
                   {player.goalDifference > 0 ? '+' : ''}{player.goalDifference}
                 </TableCell>
-                <TableCell className="text-center font-bold">
+                <TableCell className={`text-center font-bold ${isSlideshow ? 'text-sm py-3 px-3' : ''}`}>
                   {player.points}
                 </TableCell>
               </TableRow>
@@ -234,23 +258,25 @@ function GroupStandingsCard({ group }: { group: IGroup }) {
           </TableBody>
         </Table>
 
-        {/* Additional Stats */}
-        <div className="p-3 border-t bg-muted/30">
-          <div className="grid grid-cols-3 gap-2 text-xs text-center">
-            <div>
-              <div className="font-bold text-muted-foreground">MP</div>
-              <div>{standings[0]?.matchesPlayed || 0}</div>
-            </div>
-            <div>
-              <div className="font-bold text-muted-foreground">GF</div>
-              <div>{standings.reduce((sum, p) => sum + p.goalsFor, 0)}</div>
-            </div>
-            <div>
-              <div className="font-bold text-muted-foreground">GA</div>
-              <div>{standings.reduce((sum, p) => sum + p.goalsAgainst, 0)}</div>
+        {/* Additional Stats - hide in slideshow mode */}
+        {!isSlideshow && (
+          <div className="p-3 border-t bg-muted/30">
+            <div className="grid grid-cols-3 gap-2 text-xs text-center">
+              <div>
+                <div className="font-bold text-muted-foreground">MP</div>
+                <div>{standings[0]?.matchesPlayed || 0}</div>
+              </div>
+              <div>
+                <div className="font-bold text-muted-foreground">GF</div>
+                <div>{standings.reduce((sum, p) => sum + p.goalsFor, 0)}</div>
+              </div>
+              <div>
+                <div className="font-bold text-muted-foreground">GA</div>
+                <div>{standings.reduce((sum, p) => sum + p.goalsAgainst, 0)}</div>
+              </div>
             </div>
           </div>
-        </div>
+        )}
       </CardContent>
     </Card>
   );

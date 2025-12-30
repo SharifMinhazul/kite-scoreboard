@@ -42,7 +42,7 @@ export function TTTournamentBracket({ matches }: TTTournamentBracketProps) {
           <span className="block text-transparent bg-clip-text bg-gradient-to-r from-accent via-primary to-secondary">
             TABLE TENNIS
           </span>
-          <span className="block text-foreground mt-1 text-3xl md:text-4xl">
+          <span className="block text-foreground mt-1 text-xl md:text-4xl">
             TOURNAMENT BRACKET
           </span>
         </h1>

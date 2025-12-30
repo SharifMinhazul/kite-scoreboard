@@ -18,7 +18,7 @@ export const SLIDESHOW_SLIDES: SlideConfig[] = [
   {
     title: 'FIFA GROUP STANDINGS',
     url: '/fifa/groups',
-    duration: 15,
+    duration: 20,
   },
   {
     title: 'DART CHALLENGE',
@@ -33,7 +33,7 @@ export const SLIDESHOW_SLIDES: SlideConfig[] = [
   {
     title: 'TABLE TENNIS GROUPS',
     url: '/table-tennis/groups',
-    duration: 15,
+    duration: 20,
   },
 ];
 

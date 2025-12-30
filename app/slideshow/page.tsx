@@ -1,13 +1,13 @@
 'use client';
 
-import { useState, useEffect, useCallback } from 'react';
+import { Suspense, useState, useEffect, useCallback } from 'react';
 import { useSearchParams } from 'next/navigation';
 import { SlideContainer } from '@/components/slideshow/SlideContainer';
 import { SlideControls } from '@/components/slideshow/SlideControls';
 import { SlideIndicator } from '@/components/slideshow/SlideIndicator';
 import { SLIDESHOW_SLIDES, SLIDESHOW_PRESETS } from '@/config/slideshow';
 
-export default function SlideshowPage() {
+function SlideshowContent() {
   const searchParams = useSearchParams();
   const [currentSlide, setCurrentSlide] = useState(0);
   const [isPaused, setIsPaused] = useState(false);
@@ -153,5 +153,21 @@ export default function SlideshowPage() {
         </div>
       )}
     </div>
+  );
+}
+
+export default function SlideshowPage() {
+  return (
+    <Suspense fallback={
+      <div className="w-screen h-screen flex items-center justify-center bg-background">
+        <div className="text-center">
+          <div className="text-xl font-display tracking-wider text-primary animate-pulse">
+            LOADING SLIDESHOW...
+          </div>
+        </div>
+      </div>
+    }>
+      <SlideshowContent />
+    </Suspense>
   );
 }
