@@ -5,140 +5,107 @@ import { resolve } from "path";
 config({ path: resolve(process.cwd(), ".env.local") });
 
 import mongoose from "mongoose";
-import TableTennis from "../models/TableTennis";
+import TableTennis, { TTRound, TTSide, TTSlot } from "../models/TableTennis";
 
 const MONGODB_URI = process.env.MONGODB_URI || "mongodb://localhost:27017/tournament-scorecard";
 
 interface MatchDefinition {
   id: string;
-  round: "R16" | "QF" | "SF" | "Final";
+  round: TTRound;
+  side: TTSide;
   position: number;
   nextMatchId: string | null;
-  winnerDestinationSlot: "player1" | "player2" | null;
+  winnerDestinationSlot: TTSlot | null;
 }
 
 function buildMatchDefinitions(): MatchDefinition[] {
   const matches: MatchDefinition[] = [];
 
-  // Round of 16 (8 matches)
-  // R16-1 and R16-2 → QF-1
-  matches.push({
-    id: "TT-R16-1",
-    round: "R16",
-    position: 0,
-    nextMatchId: "TT-QF-1",
-    winnerDestinationSlot: "player1",
-  });
-  matches.push({
-    id: "TT-R16-2",
-    round: "R16",
-    position: 1,
-    nextMatchId: "TT-QF-1",
-    winnerDestinationSlot: "player2",
-  });
+  // LEFT SIDE
+  // Round of 16 (4 matches on left)
+  for (let i = 0; i < 4; i++) {
+    const qfMatch = Math.floor(i / 2) + 1; // 0-1 -> QF-1, 2-3 -> QF-2
+    const slot: TTSlot = i % 2 === 0 ? "player1" : "player2";
 
-  // R16-3 and R16-4 → QF-2
-  matches.push({
-    id: "TT-R16-3",
-    round: "R16",
-    position: 2,
-    nextMatchId: "TT-QF-2",
-    winnerDestinationSlot: "player1",
-  });
-  matches.push({
-    id: "TT-R16-4",
-    round: "R16",
-    position: 3,
-    nextMatchId: "TT-QF-2",
-    winnerDestinationSlot: "player2",
-  });
+    matches.push({
+      id: `TT-L-R16-${i + 1}`,
+      round: "R16",
+      side: "left",
+      position: i,
+      nextMatchId: `TT-L-QF-${qfMatch}`,
+      winnerDestinationSlot: slot,
+    });
+  }
 
-  // R16-5 and R16-6 → QF-3
-  matches.push({
-    id: "TT-R16-5",
-    round: "R16",
-    position: 4,
-    nextMatchId: "TT-QF-3",
-    winnerDestinationSlot: "player1",
-  });
-  matches.push({
-    id: "TT-R16-6",
-    round: "R16",
-    position: 5,
-    nextMatchId: "TT-QF-3",
-    winnerDestinationSlot: "player2",
-  });
+  // Quarter Finals (2 matches on left)
+  for (let i = 0; i < 2; i++) {
+    const slot: TTSlot = i % 2 === 0 ? "player1" : "player2";
 
-  // R16-7 and R16-8 → QF-4
-  matches.push({
-    id: "TT-R16-7",
-    round: "R16",
-    position: 6,
-    nextMatchId: "TT-QF-4",
-    winnerDestinationSlot: "player1",
-  });
-  matches.push({
-    id: "TT-R16-8",
-    round: "R16",
-    position: 7,
-    nextMatchId: "TT-QF-4",
-    winnerDestinationSlot: "player2",
-  });
+    matches.push({
+      id: `TT-L-QF-${i + 1}`,
+      round: "QF",
+      side: "left",
+      position: i,
+      nextMatchId: "TT-L-SF-1",
+      winnerDestinationSlot: slot,
+    });
+  }
 
-  // Quarter Finals (4 matches)
-  // QF-1 and QF-2 → SF-1
+  // Semi Final (1 match on left)
   matches.push({
-    id: "TT-QF-1",
-    round: "QF",
-    position: 0,
-    nextMatchId: "TT-SF-1",
-    winnerDestinationSlot: "player1",
-  });
-  matches.push({
-    id: "TT-QF-2",
-    round: "QF",
-    position: 1,
-    nextMatchId: "TT-SF-1",
-    winnerDestinationSlot: "player2",
-  });
-
-  // QF-3 and QF-4 → SF-2
-  matches.push({
-    id: "TT-QF-3",
-    round: "QF",
-    position: 2,
-    nextMatchId: "TT-SF-2",
-    winnerDestinationSlot: "player1",
-  });
-  matches.push({
-    id: "TT-QF-4",
-    round: "QF",
-    position: 3,
-    nextMatchId: "TT-SF-2",
-    winnerDestinationSlot: "player2",
-  });
-
-  // Semi Finals (2 matches)
-  // SF-1 and SF-2 → Final
-  matches.push({
-    id: "TT-SF-1",
+    id: "TT-L-SF-1",
     round: "SF",
+    side: "left",
     position: 0,
-    nextMatchId: "TT-F-1",
+    nextMatchId: "TT-C-F-1",
     winnerDestinationSlot: "player1",
   });
+
+  // RIGHT SIDE
+  // Round of 16 (4 matches on right)
+  for (let i = 0; i < 4; i++) {
+    const qfMatch = Math.floor(i / 2) + 1; // 0-1 -> QF-1, 2-3 -> QF-2
+    const slot: TTSlot = i % 2 === 0 ? "player1" : "player2";
+
+    matches.push({
+      id: `TT-R-R16-${i + 1}`,
+      round: "R16",
+      side: "right",
+      position: i,
+      nextMatchId: `TT-R-QF-${qfMatch}`,
+      winnerDestinationSlot: slot,
+    });
+  }
+
+  // Quarter Finals (2 matches on right)
+  for (let i = 0; i < 2; i++) {
+    const slot: TTSlot = i % 2 === 0 ? "player1" : "player2";
+
+    matches.push({
+      id: `TT-R-QF-${i + 1}`,
+      round: "QF",
+      side: "right",
+      position: i,
+      nextMatchId: "TT-R-SF-1",
+      winnerDestinationSlot: slot,
+    });
+  }
+
+  // Semi Final (1 match on right)
   matches.push({
-    id: "TT-SF-2",
+    id: "TT-R-SF-1",
     round: "SF",
-    position: 1,
-    nextMatchId: "TT-F-1",
+    side: "right",
+    position: 0,
+    nextMatchId: "TT-C-F-1",
     winnerDestinationSlot: "player2",
   });
 
-  // Final (1 match)
+  // CENTER - FINAL
   matches.push({
-    id: "TT-F-1",
+    id: "TT-C-F-1",
     round: "Final",
+    side: "center",
     position: 0,
     nextMatchId: null,
     winnerDestinationSlot: null,
@@ -147,54 +114,113 @@ function buildMatchDefinitions(): MatchDefinition[] {
   return matches;
 }
 
-async function seedTableTennis() {
+async function createMatches(definitions: MatchDefinition[]) {
+  console.log(`Creating ${definitions.length} matches...`);
+
+  const matches = definitions.map((def) => ({
+    id: def.id,
+    round: def.round,
+    side: def.side,
+    position: def.position,
+    player1: null,
+    player2: null,
+    score1: null,
+    score2: null,
+    status: "scheduled",
+    nextMatchId: def.nextMatchId,
+    winnerDestinationSlot: def.winnerDestinationSlot,
+    scheduledTime: null,
+    completedTime: null,
+  }));
+
+  await TableTennis.insertMany(matches);
+  console.log(`✅ Created ${matches.length} matches successfully`);
+}
+
+function validateBracket(definitions: MatchDefinition[]) {
+  console.log("\nValidating bracket structure...");
+
+  const matchIds = new Set(definitions.map((m) => m.id));
+  let isValid = true;
+
+  for (const match of definitions) {
+    // Check that nextMatchId exists (if not null)
+    if (match.nextMatchId && !matchIds.has(match.nextMatchId)) {
+      console.error(`❌ Invalid nextMatchId: ${match.id} -> ${match.nextMatchId}`);
+      isValid = false;
+    }
+
+    // Check that winnerDestinationSlot is set when nextMatchId exists
+    if (match.nextMatchId && !match.winnerDestinationSlot) {
+      console.error(`❌ Missing winnerDestinationSlot: ${match.id}`);
+      isValid = false;
+    }
+  }
+
+  if (isValid) {
+    console.log("✅ Bracket structure is valid!");
+  } else {
+    console.error("❌ Bracket structure has errors!");
+  }
+
+  return isValid;
+}
+
+async function clearBracket() {
+  console.log("Clearing existing bracket...");
+  const result = await TableTennis.deleteMany({});
+  console.log(`✅ Deleted ${result.deletedCount} existing matches`);
+}
+
+async function printSummary() {
+  console.log("\n=== BRACKET SUMMARY ===");
+
+  const rounds: TTRound[] = ["R16", "QF", "SF", "Final"];
+
+  for (const round of rounds) {
+    const count = await TableTennis.countDocuments({ round });
+    console.log(`${round}: ${count} matches`);
+  }
+
+  const total = await TableTennis.countDocuments();
+  console.log(`\nTotal: ${total} matches`);
+
+  console.log("\n=== SAMPLE MATCHES ===");
+  const samples = await TableTennis.find().limit(5);
+  samples.forEach((match) => {
+    console.log(
+      `${match.id} (${match.round}, ${match.side}) -> Next: ${match.nextMatchId || "None"} (${match.winnerDestinationSlot || "N/A"})`
+    );
+  });
+}
+
+async function main() {
   try {
-    console.log("🏓 Starting Table Tennis bracket seeding...");
-    console.log("📝 MongoDB URI:", MONGODB_URI);
+    console.log("🏓 Starting Table Tennis bracket seeding...\n");
 
     // Connect to MongoDB
     await mongoose.connect(MONGODB_URI);
     console.log("✅ MongoDB connected successfully");
 
-    // Clear existing table tennis matches
-    await TableTennis.deleteMany({});
-    console.log("🗑️  Cleared existing table tennis matches");
-
     // Build match definitions
-    const matchDefinitions = buildMatchDefinitions();
-    console.log(`📊 Generated ${matchDefinitions.length} match definitions`);
+    const definitions = buildMatchDefinitions();
+    console.log(`Built ${definitions.length} match definitions\n`);
+
+    // Validate bracket structure
+    const isValid = validateBracket(definitions);
+    if (!isValid) {
+      console.error("\n❌ Validation failed! Aborting...");
+      process.exit(1);
+    }
+
+    // Clear existing bracket
+    await clearBracket();
 
     // Create matches
-    const createdMatches = await TableTennis.insertMany(
-      matchDefinitions.map((def) => ({
-        id: def.id,
-        round: def.round,
-        position: def.position,
-        player1: null,
-        player2: null,
-        score1: null,
-        score2: null,
-        status: "scheduled",
-        nextMatchId: def.nextMatchId,
-        winnerDestinationSlot: def.winnerDestinationSlot,
-        completedTime: null,
-      }))
-    );
+    await createMatches(definitions);
 
-    console.log(`✅ Created ${createdMatches.length} table tennis matches`);
-
-    // Breakdown by round
-    const r16Count = createdMatches.filter((m) => m.round === "R16").length;
-    const qfCount = createdMatches.filter((m) => m.round === "QF").length;
-    const sfCount = createdMatches.filter((m) => m.round === "SF").length;
-    const finalCount = createdMatches.filter((m) => m.round === "Final").length;
-
-    console.log("\n📋 Bracket Structure:");
-    console.log(`   Round of 16: ${r16Count} matches`);
-    console.log(`   Quarter Finals: ${qfCount} matches`);
-    console.log(`   Semi Finals: ${sfCount} matches`);
-    console.log(`   Final: ${finalCount} match`);
-    console.log(`   Total: ${createdMatches.length} matches`);
+    // Print summary
+    await printSummary();
 
     console.log("\n✅ Table Tennis bracket seeding completed successfully!");
     console.log("\n📌 Next steps:");
@@ -205,9 +231,10 @@ async function seedTableTennis() {
 
     process.exit(0);
   } catch (error) {
-    console.error("❌ Error seeding table tennis bracket:", error);
+    console.error("\n❌ Error during seeding:");
+    console.error(error);
     process.exit(1);
   }
 }
 
-seedTableTennis();
+main();

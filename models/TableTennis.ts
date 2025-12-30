@@ -1,12 +1,15 @@
 import mongoose, { Schema, Document, Model } from "mongoose";
 
 export type TTRound = "R16" | "QF" | "SF" | "Final";
+export type TTSide = "left" | "right" | "center";
 export type TTStatus = "scheduled" | "live" | "completed";
+export type TTSlot = "player1" | "player2";
 
 export interface ITableTennis extends Document {
-  id: string; // Manual ID: "TT-R16-1", "TT-QF-1", "TT-SF-1", "TT-F-1"
+  id: string;
   round: TTRound;
-  position: number; // Position within the round (0-7 for R16, 0-3 for QF, etc.)
+  side: TTSide;
+  position: number;
 
   player1: string | null;
   player2: string | null;
@@ -14,11 +17,12 @@ export interface ITableTennis extends Document {
   score2: number | null;
   status: TTStatus;
 
-  // Graph pointers for auto-advance
-  nextMatchId: string | null; // Where winner advances
-  winnerDestinationSlot: "player1" | "player2" | null; // Which slot in next match
+  nextMatchId: string | null;
+  winnerDestinationSlot: TTSlot | null;
 
+  scheduledTime: Date | null;
   completedTime: Date | null;
+
   createdAt: Date;
   updatedAt: Date;
 }
@@ -36,10 +40,16 @@ const TableTennisSchema = new Schema<ITableTennis, TableTennisModel, ITableTenni
       type: String,
       required: true,
       unique: true,
+      index: true,
     },
     round: {
       type: String,
       enum: ["R16", "QF", "SF", "Final"],
+      required: true,
+    },
+    side: {
+      type: String,
+      enum: ["left", "right", "center"],
       required: true,
     },
     position: {
@@ -76,6 +86,10 @@ const TableTennisSchema = new Schema<ITableTennis, TableTennisModel, ITableTenni
       enum: ["player1", "player2"],
       default: null,
     },
+    scheduledTime: {
+      type: Date,
+      default: null,
+    },
     completedTime: {
       type: Date,
       default: null,
@@ -86,14 +100,22 @@ const TableTennisSchema = new Schema<ITableTennis, TableTennisModel, ITableTenni
   }
 );
 
-// Determine the winner of the match
+// Compound index for efficient queries
+TableTennisSchema.index({ round: 1, side: 1, position: 1 });
+
+// Instance method to determine the winner
 TableTennisSchema.methods.determineWinner = function (): string | null {
-  if (this.score1 === null || this.score2 === null) return null;
-  if (this.score1 === this.score2) return null; // Tie (shouldn't happen)
+  if (
+    this.score1 === null ||
+    this.score2 === null ||
+    this.score1 === this.score2
+  ) {
+    return null;
+  }
   return this.score1 > this.score2 ? this.player1 : this.player2;
 };
 
-// Check if the match can be updated
+// Instance method to check if score can be updated
 TableTennisSchema.methods.canUpdateScore = function (): boolean {
   return (
     this.player1 !== null &&
@@ -101,6 +123,20 @@ TableTennisSchema.methods.canUpdateScore = function (): boolean {
     this.status !== "completed"
   );
 };
+
+// Virtual field for winner (computed property)
+TableTennisSchema.virtual("winner").get(function () {
+  return this.determineWinner();
+});
+
+// Virtual field for isComplete
+TableTennisSchema.virtual("isComplete").get(function () {
+  return this.status === "completed";
+});
+
+// Configure virtuals to be included in JSON
+TableTennisSchema.set("toJSON", { virtuals: true });
+TableTennisSchema.set("toObject", { virtuals: true });
 
 const TableTennis =
   (mongoose.models.TableTennis as TableTennisModel) ||
