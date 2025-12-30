@@ -8,9 +8,10 @@ export const revalidate = 30; // Revalidate every 30 seconds
 export default async function FifaBracketPage({
   searchParams,
 }: {
-  searchParams: { slideshow?: string };
+  searchParams: Promise<{ slideshow?: string }>;
 }) {
-  const isSlideshow = searchParams.slideshow === 'true';
+  const params = await searchParams;
+  const isSlideshow = params.slideshow === 'true';
   const result = await getAllMatches();
 
   if (!result.success || !result.data) {

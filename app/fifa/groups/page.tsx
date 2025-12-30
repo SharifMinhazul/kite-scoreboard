@@ -22,9 +22,10 @@ async function getGroups() {
 export default async function GroupsPage({
   searchParams,
 }: {
-  searchParams: { slideshow?: string };
+  searchParams: Promise<{ slideshow?: string }>;
 }) {
-  const isSlideshow = searchParams.slideshow === 'true';
+  const params = await searchParams;
+  const isSlideshow = params.slideshow === 'true';
   const groups = await getGroups();
 
   if (groups.length === 0) {

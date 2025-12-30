@@ -8,9 +8,10 @@ export const revalidate = 5; // Revalidate every 5 seconds
 export default async function TableTennisPage({
   searchParams,
 }: {
-  searchParams: { slideshow?: string };
+  searchParams: Promise<{ slideshow?: string }>;
 }) {
-  const isSlideshow = searchParams.slideshow === 'true';
+  const params = await searchParams;
+  const isSlideshow = params.slideshow === 'true';
   const result = await getAllTTMatches();
 
   if (!result.success || !result.data) {

@@ -1,12 +1,13 @@
 import Link from "next/link";
 import { Button } from "@/components/ui/button";
 
-export default function HomePage({
+export default async function HomePage({
   searchParams,
 }: {
-  searchParams: { slideshow?: string };
+  searchParams: Promise<{ slideshow?: string }>;
 }) {
-  const isSlideshow = searchParams.slideshow === 'true';
+  const params = await searchParams;
+  const isSlideshow = params.slideshow === 'true';
   const games = [
     {
       title: "FIFA WORLD CUP",
