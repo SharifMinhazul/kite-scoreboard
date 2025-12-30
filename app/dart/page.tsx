@@ -53,6 +53,9 @@ export default async function DartScoreboardPage() {
             <Button asChild variant="outline">
               <Link href="/groups">Group Stage</Link>
             </Button>
+            <Button asChild variant="outline">
+              <Link href="/table-tennis">🏓 TT</Link>
+            </Button>
           </div>
         </div>
         <div className="h-[2px] bg-gradient-to-r from-transparent via-primary to-transparent" />

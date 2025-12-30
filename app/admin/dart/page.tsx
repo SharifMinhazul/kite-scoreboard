@@ -188,6 +188,9 @@ export default function AdminDartPage() {
             <Button asChild variant="outline">
               <Link href="/admin/groups">Group Admin</Link>
             </Button>
+            <Button asChild variant="outline">
+              <Link href="/admin/table-tennis">🏓 TT Admin</Link>
+            </Button>
           </div>
         </div>
 

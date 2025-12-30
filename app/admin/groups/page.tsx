@@ -152,6 +152,9 @@ export default function AdminGroupsPage() {
             <Button asChild variant="outline">
               <Link href="/admin/dart">🎯 Dart</Link>
             </Button>
+            <Button asChild variant="outline">
+              <Link href="/admin/table-tennis">🏓 TT</Link>
+            </Button>
           </div>
         </div>
 

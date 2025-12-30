@@ -38,6 +38,9 @@ export default async function Home() {
           <Link href="/dart">🎯 Dart</Link>
         </Button>
         <Button asChild variant="outline">
+          <Link href="/table-tennis">🏓 TT</Link>
+        </Button>
+        <Button asChild variant="outline">
           <Link href="/admin">Admin</Link>
         </Button>
       </div>

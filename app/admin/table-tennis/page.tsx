@@ -1,31 +1,32 @@
-import { getAllMatches } from "@/app/actions/match-actions";
-import { ScoreInput } from "@/components/admin/ScoreInput";
-import { MatchTable } from "@/components/admin/MatchTable";
+import { getAllTTMatches } from "@/app/actions/table-tennis-actions";
+import { TTScoreInput } from "@/components/admin/TTScoreInput";
 import Link from "next/link";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 
 export const revalidate = 0; // Always fetch fresh data for admin
 
-export default async function AdminPage() {
-  const result = await getAllMatches();
+export default async function AdminTableTennisPage() {
+  const result = await getAllTTMatches();
 
   if (!result.success || !result.data) {
     return (
       <div className="min-h-screen flex items-center justify-center p-4">
         <div className="text-center max-w-md">
-          <h1 className="text-3xl font-bold mb-4 text-destructive">Error Loading Matches</h1>
+          <h1 className="text-3xl font-bold mb-4 text-destructive">
+            Error Loading Matches
+          </h1>
           <p className="text-muted-foreground mb-6">{result.message}</p>
           <div className="space-y-2 text-sm text-muted-foreground mb-6">
             <p>Make sure:</p>
             <ul className="list-disc list-inside text-left">
-              <li>MongoDB is running locally or Atlas is configured</li>
-              <li>The database has been seeded with `npm run seed`</li>
-              <li>Environment variables are set correctly in `.env.local`</li>
+              <li>MongoDB is running</li>
+              <li>Run: npm run seed-table-tennis</li>
+              <li>Environment variables are set in `.env.local`</li>
             </ul>
           </div>
           <Button asChild>
-            <Link href="/">Back to Bracket View</Link>
+            <Link href="/table-tennis">Back to Bracket View</Link>
           </Button>
         </div>
       </div>
@@ -51,24 +52,28 @@ export default async function AdminPage() {
       <div className="max-w-7xl mx-auto mb-8">
         <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-4 mb-4">
           <div>
-            <h1 className="text-3xl md:text-4xl font-bold mb-2">Admin Dashboard</h1>
-            <p className="text-muted-foreground">Manage tournament matches and scores</p>
+            <h1 className="text-3xl md:text-4xl font-bold mb-2">
+              🏓 Table Tennis Admin
+            </h1>
+            <p className="text-muted-foreground">
+              Manage tournament matches and scores
+            </p>
           </div>
           <div className="flex gap-2 flex-wrap">
             <Button asChild variant="default">
-              <Link href="/admin/groups">Group Stage</Link>
-            </Button>
-            <Button asChild variant="default">
-              <Link href="/admin/dart">🎯 Dart</Link>
-            </Button>
-            <Button asChild variant="default">
-              <Link href="/admin/table-tennis">🏓 Table Tennis</Link>
-            </Button>
-            <Button asChild variant="secondary">
-              <Link href="/admin/setup">Add Players</Link>
+              <Link href="/admin/table-tennis/setup">Add Players</Link>
             </Button>
             <Button asChild variant="outline">
-              <Link href="/">View Bracket</Link>
+              <Link href="/table-tennis">View Bracket</Link>
+            </Button>
+            <Button asChild variant="outline">
+              <Link href="/admin">FIFA Admin</Link>
+            </Button>
+            <Button asChild variant="outline">
+              <Link href="/admin/groups">Group Admin</Link>
+            </Button>
+            <Button asChild variant="outline">
+              <Link href="/admin/dart">🎯 Dart</Link>
             </Button>
           </div>
         </div>
@@ -101,7 +106,7 @@ export default async function AdminPage() {
             </h2>
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4">
               {r16Matches.map((match) => (
-                <ScoreInput key={match.id} match={match} />
+                <TTScoreInput key={match.id} match={match} />
               ))}
             </div>
           </section>
@@ -116,7 +121,7 @@ export default async function AdminPage() {
             </h2>
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
               {qfMatches.map((match) => (
-                <ScoreInput key={match.id} match={match} />
+                <TTScoreInput key={match.id} match={match} />
               ))}
             </div>
           </section>
@@ -129,9 +134,9 @@ export default async function AdminPage() {
               Semi Finals
               <Badge variant="outline">{sfMatches.length} matches</Badge>
             </h2>
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
               {sfMatches.map((match) => (
-                <ScoreInput key={match.id} match={match} />
+                <TTScoreInput key={match.id} match={match} />
               ))}
             </div>
           </section>
@@ -143,17 +148,11 @@ export default async function AdminPage() {
             <h2 className="text-2xl font-bold mb-4">🏆 Final</h2>
             <div className="grid grid-cols-1 max-w-md">
               {finalMatches.map((match) => (
-                <ScoreInput key={match.id} match={match} />
+                <TTScoreInput key={match.id} match={match} />
               ))}
             </div>
           </section>
         )}
-
-        {/* Table View */}
-        <section>
-          <h2 className="text-2xl font-bold mb-4">All Matches (Table View)</h2>
-          <MatchTable matches={matches} />
-        </section>
       </div>
     </div>
   );

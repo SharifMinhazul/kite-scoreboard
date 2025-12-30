@@ -61,6 +61,9 @@ export default async function GroupsPage() {
             <Button asChild variant="outline">
               <Link href="/dart">🎯 Dart</Link>
             </Button>
+            <Button asChild variant="outline">
+              <Link href="/table-tennis">🏓 TT</Link>
+            </Button>
           </div>
         </div>
         <div className="h-[2px] bg-gradient-to-r from-transparent via-primary to-transparent" />
