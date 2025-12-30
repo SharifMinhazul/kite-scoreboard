@@ -35,7 +35,7 @@ export async function getDartTournament(): Promise<ActionResult<IDart>> {
         currentRound: 1,
         isFinished: false,
       });
-      tournament = newTournament.toObject();
+      tournament = await Dart.findById(newTournament._id).lean();
     }
 
     return {
