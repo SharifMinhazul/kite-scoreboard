@@ -26,7 +26,7 @@ interface Group {
   players: Player[];
 }
 
-export default function AdminGroupsPage() {
+export default function AdminTTGroupsPage() {
   const [groups, setGroups] = useState<Group[]>([]);
   const [selectedGroup, setSelectedGroup] = useState("");
   const [player1, setPlayer1] = useState("");
@@ -42,7 +42,7 @@ export default function AdminGroupsPage() {
 
   const fetchGroups = async () => {
     try {
-      const response = await fetch("/api/groups");
+      const response = await fetch("/api/tt-groups");
       const data = await response.json();
       setGroups(data);
       if (data.length > 0) {
@@ -73,7 +73,7 @@ export default function AdminGroupsPage() {
     setMessage("");
 
     try {
-      const response = await fetch("/api/groups/update-match", {
+      const response = await fetch("/api/tt-groups/update-match", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
@@ -109,14 +109,14 @@ export default function AdminGroupsPage() {
 
     setLoading(true);
     try {
-      const response = await fetch("/api/groups/advance-to-knockout", {
+      const response = await fetch("/api/tt-groups/advance-to-knockout", {
         method: "POST",
       });
 
       const result = await response.json();
 
       if (response.ok) {
-        alert(`✅ ${result.message}\n\nGo to /admin to see the updated bracket!`);
+        alert(`✅ ${result.message}\n\nGo to /admin/table-tennis to see the updated bracket!`);
       } else {
         alert(`❌ ${result.error}`);
       }
@@ -133,30 +133,27 @@ export default function AdminGroupsPage() {
         {/* Header */}
         <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-4 mb-8">
           <div>
-            <h1 className="text-3xl font-bold mb-2">Group Stage Admin</h1>
+            <h1 className="text-3xl font-bold mb-2">🏓 Table Tennis Group Stage Admin</h1>
             <p className="text-muted-foreground">Enter group match results</p>
           </div>
           <div className="flex gap-2 flex-wrap">
             <Button asChild variant="default">
-              <Link href="/admin/groups/setup">Add Players</Link>
+              <Link href="/admin/table-tennis/groups/setup">Add Players</Link>
             </Button>
             <Button asChild variant="secondary">
-              <Link href="/admin/groups/standings">Manage Ties</Link>
+              <Link href="/admin/table-tennis/groups/standings">Manage Ties</Link>
             </Button>
             <Button asChild variant="outline">
-              <Link href="/groups">View Standings</Link>
+              <Link href="/table-tennis/groups">View Standings</Link>
             </Button>
             <Button asChild variant="outline">
-              <Link href="/admin">Knockout Admin</Link>
+              <Link href="/admin/table-tennis">Knockout Admin</Link>
+            </Button>
+            <Button asChild variant="outline">
+              <Link href="/admin">⚽ FIFA</Link>
             </Button>
             <Button asChild variant="outline">
               <Link href="/admin/dart">🎯 Dart</Link>
-            </Button>
-            <Button asChild variant="outline">
-              <Link href="/admin/table-tennis">🏓 TT Knockout</Link>
-            </Button>
-            <Button asChild variant="outline">
-              <Link href="/admin/table-tennis/groups">🏓 TT Groups</Link>
             </Button>
           </div>
         </div>

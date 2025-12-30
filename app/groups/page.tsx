@@ -59,10 +59,10 @@ export default async function GroupsPage() {
               <Link href="/">Knockout Bracket</Link>
             </Button>
             <Button asChild variant="outline">
-              <Link href="/dart">🎯 Dart</Link>
+              <Link href="/table-tennis/groups">🏓 TT Groups</Link>
             </Button>
             <Button asChild variant="outline">
-              <Link href="/table-tennis">🏓 TT</Link>
+              <Link href="/dart">🎯 Dart</Link>
             </Button>
           </div>
         </div>

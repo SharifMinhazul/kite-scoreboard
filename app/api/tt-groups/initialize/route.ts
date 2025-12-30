@@ -1,0 +1,34 @@
+import { NextResponse } from "next/server";
+import { connectDB } from "@/lib/mongodb";
+import TableTennisGroup, { TTGroupName } from "@/models/TableTennisGroup";
+
+export async function POST() {
+  try {
+    await connectDB();
+
+    // Clear existing groups
+    await TableTennisGroup.deleteMany({});
+
+    // Create all 8 groups (A-H) with no players
+    const groupNames: TTGroupName[] = ["A", "B", "C", "D", "E", "F", "G", "H"];
+
+    for (const name of groupNames) {
+      const group = new TableTennisGroup({
+        name,
+        players: [],
+      });
+      await group.save();
+    }
+
+    return NextResponse.json({
+      success: true,
+      message: "All 8 groups initialized successfully",
+    });
+  } catch (error) {
+    console.error("Error initializing groups:", error);
+    return NextResponse.json(
+      { error: "Failed to initialize groups" },
+      { status: 500 }
+    );
+  }
+}

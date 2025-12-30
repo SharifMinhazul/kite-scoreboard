@@ -63,14 +63,17 @@ export default async function AdminTableTennisPage() {
             <Button asChild variant="default">
               <Link href="/admin/table-tennis/setup">Add Players</Link>
             </Button>
+            <Button asChild variant="secondary">
+              <Link href="/admin/table-tennis/groups">TT Groups Admin</Link>
+            </Button>
             <Button asChild variant="outline">
               <Link href="/table-tennis">View Bracket</Link>
             </Button>
             <Button asChild variant="outline">
-              <Link href="/admin">FIFA Admin</Link>
+              <Link href="/table-tennis/groups">TT Groups</Link>
             </Button>
             <Button asChild variant="outline">
-              <Link href="/admin/groups">Group Admin</Link>
+              <Link href="/admin">⚽ FIFA</Link>
             </Button>
             <Button asChild variant="outline">
               <Link href="/admin/dart">🎯 Dart</Link>
