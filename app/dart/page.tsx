@@ -7,7 +7,12 @@ import Link from "next/link";
 
 export const revalidate = 5; // Revalidate every 5 seconds
 
-export default async function DartScoreboardPage() {
+export default async function DartScoreboardPage({
+  searchParams,
+}: {
+  searchParams: { slideshow?: string };
+}) {
+  const isSlideshow = searchParams.slideshow === 'true';
   const result = await getDartTournament();
 
   if (!result.success || !result.data) {
@@ -42,14 +47,16 @@ export default async function DartScoreboardPage() {
       <div className="fixed top-0 right-0 w-32 h-2 bg-gradient-to-l from-accent to-transparent z-50"></div>
 
       {/* Navigation */}
-      <div className="fixed top-6 right-6 z-50 flex gap-2">
-        <Button asChild variant="outline" size="sm" className="border-secondary text-secondary hover:bg-secondary hover:text-secondary-foreground font-display">
-          <Link href="/">HOME</Link>
-        </Button>
-        <Button asChild variant="default" size="sm" className="bg-secondary hover:bg-secondary/90 font-display">
-          <Link href="/admin/dart">ADMIN ACCESS</Link>
-        </Button>
-      </div>
+      {!isSlideshow && (
+        <div className="fixed top-6 right-6 z-50 flex gap-2">
+          <Button asChild variant="outline" size="sm" className="border-secondary text-secondary hover:bg-secondary hover:text-secondary-foreground font-display">
+            <Link href="/">HOME</Link>
+          </Button>
+          <Button asChild variant="default" size="sm" className="bg-secondary hover:bg-secondary/90 font-display">
+            <Link href="/admin/dart">ADMIN ACCESS</Link>
+          </Button>
+        </div>
+      )}
 
       {/* Header */}
       <div className="max-w-7xl mx-auto mb-8 broadcast-title">

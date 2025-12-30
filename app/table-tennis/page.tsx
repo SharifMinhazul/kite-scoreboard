@@ -5,7 +5,12 @@ import Link from "next/link";
 
 export const revalidate = 5; // Revalidate every 5 seconds
 
-export default async function TableTennisPage() {
+export default async function TableTennisPage({
+  searchParams,
+}: {
+  searchParams: { slideshow?: string };
+}) {
+  const isSlideshow = searchParams.slideshow === 'true';
   const result = await getAllTTMatches();
 
   if (!result.success || !result.data) {
@@ -34,17 +39,19 @@ export default async function TableTennisPage() {
   return (
     <div>
       {/* Navigation */}
-      <div className="fixed top-4 right-4 z-50 flex gap-2">
-        <Button asChild variant="outline" size="sm">
-          <Link href="/">Home</Link>
-        </Button>
-        <Button asChild variant="outline" size="sm">
-          <Link href="/table-tennis/groups">Groups</Link>
-        </Button>
-        <Button asChild variant="secondary" size="sm">
-          <Link href="/admin/table-tennis">Admin</Link>
-        </Button>
-      </div>
+      {!isSlideshow && (
+        <div className="fixed top-4 right-4 z-50 flex gap-2">
+          <Button asChild variant="outline" size="sm">
+            <Link href="/">Home</Link>
+          </Button>
+          <Button asChild variant="outline" size="sm">
+            <Link href="/table-tennis/groups">Groups</Link>
+          </Button>
+          <Button asChild variant="secondary" size="sm">
+            <Link href="/admin/table-tennis">Admin</Link>
+          </Button>
+        </div>
+      )}
 
       {/* Bracket */}
       <TTTournamentBracket matches={matches} />

@@ -5,7 +5,12 @@ import { Button } from "@/components/ui/button";
 
 export const revalidate = 30; // Revalidate every 30 seconds
 
-export default async function FifaBracketPage() {
+export default async function FifaBracketPage({
+  searchParams,
+}: {
+  searchParams: { slideshow?: string };
+}) {
+  const isSlideshow = searchParams.slideshow === 'true';
   const result = await getAllMatches();
 
   if (!result.success || !result.data) {
@@ -30,17 +35,19 @@ export default async function FifaBracketPage() {
   return (
     <div>
       {/* Navigation */}
-      <div className="fixed top-4 right-4 z-50 flex gap-2">
-        <Button asChild variant="outline" size="sm">
-          <Link href="/">Home</Link>
-        </Button>
-        <Button asChild variant="outline" size="sm">
-          <Link href="/fifa/groups">Groups</Link>
-        </Button>
-        <Button asChild variant="secondary" size="sm">
-          <Link href="/admin/fifa">Admin</Link>
-        </Button>
-      </div>
+      {!isSlideshow && (
+        <div className="fixed top-4 right-4 z-50 flex gap-2">
+          <Button asChild variant="outline" size="sm">
+            <Link href="/">Home</Link>
+          </Button>
+          <Button asChild variant="outline" size="sm">
+            <Link href="/fifa/groups">Groups</Link>
+          </Button>
+          <Button asChild variant="secondary" size="sm">
+            <Link href="/admin/fifa">Admin</Link>
+          </Button>
+        </div>
+      )}
 
       {/* Tournament Bracket */}
       <TournamentBracket matches={result.data} />

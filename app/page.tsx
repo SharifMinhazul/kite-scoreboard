@@ -1,7 +1,12 @@
 import Link from "next/link";
 import { Button } from "@/components/ui/button";
 
-export default function HomePage() {
+export default function HomePage({
+  searchParams,
+}: {
+  searchParams: { slideshow?: string };
+}) {
+  const isSlideshow = searchParams.slideshow === 'true';
   const games = [
     {
       title: "FIFA WORLD CUP",
@@ -38,11 +43,13 @@ export default function HomePage() {
       <div className="fixed top-0 right-0 w-32 h-2 bg-gradient-to-l from-secondary to-transparent z-50"></div>
 
       {/* Admin access button */}
-      <div className="fixed top-6 right-6 z-50">
-        <Button asChild variant="outline" size="sm" className="border-primary text-primary hover:bg-primary hover:text-primary-foreground font-display">
-          <Link href="/login">ADMIN ACCESS</Link>
-        </Button>
-      </div>
+      {!isSlideshow && (
+        <div className="fixed top-6 right-6 z-50">
+          <Button asChild variant="outline" size="sm" className="border-primary text-primary hover:bg-primary hover:text-primary-foreground font-display">
+            <Link href="/login">ADMIN ACCESS</Link>
+          </Button>
+        </div>
+      )}
 
       {/* Main content */}
       <div className="container mx-auto px-4 py-12 md:py-20">

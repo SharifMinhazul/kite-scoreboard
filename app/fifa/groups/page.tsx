@@ -19,7 +19,12 @@ async function getGroups() {
   }
 }
 
-export default async function GroupsPage() {
+export default async function GroupsPage({
+  searchParams,
+}: {
+  searchParams: { slideshow?: string };
+}) {
+  const isSlideshow = searchParams.slideshow === 'true';
   const groups = await getGroups();
 
   if (groups.length === 0) {
@@ -47,17 +52,19 @@ export default async function GroupsPage() {
       <div className="fixed top-0 right-0 w-32 h-2 bg-gradient-to-l from-accent to-transparent z-50"></div>
 
       {/* Navigation */}
-      <div className="fixed top-6 right-6 z-50 flex gap-2">
-        <Button asChild variant="outline" size="sm" className="border-primary text-primary hover:bg-primary hover:text-primary-foreground font-display">
-          <Link href="/">HOME</Link>
-        </Button>
-        <Button asChild variant="outline" size="sm" className="border-primary text-primary hover:bg-primary hover:text-primary-foreground font-display">
-          <Link href="/fifa">BRACKET</Link>
-        </Button>
-        <Button asChild variant="default" size="sm" className="bg-primary hover:bg-primary/90 font-display">
-          <Link href="/admin/fifa/groups">ADMIN</Link>
-        </Button>
-      </div>
+      {!isSlideshow && (
+        <div className="fixed top-6 right-6 z-50 flex gap-2">
+          <Button asChild variant="outline" size="sm" className="border-primary text-primary hover:bg-primary hover:text-primary-foreground font-display">
+            <Link href="/">HOME</Link>
+          </Button>
+          <Button asChild variant="outline" size="sm" className="border-primary text-primary hover:bg-primary hover:text-primary-foreground font-display">
+            <Link href="/fifa">BRACKET</Link>
+          </Button>
+          <Button asChild variant="default" size="sm" className="bg-primary hover:bg-primary/90 font-display">
+            <Link href="/admin/fifa/groups">ADMIN</Link>
+          </Button>
+        </div>
+      )}
 
       {/* Header */}
       <div className="max-w-7xl mx-auto mb-8 broadcast-title">
