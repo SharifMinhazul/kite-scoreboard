@@ -1,0 +1,43 @@
+import { getAllMatches } from "@/app/actions/match-actions";
+import { TournamentBracket } from "@/components/bracket/TournamentBracket";
+import Link from "next/link";
+import { Button } from "@/components/ui/button";
+
+export const revalidate = 30; // Revalidate every 30 seconds
+
+export default async function Home() {
+  const result = await getAllMatches();
+
+  if (!result.success || !result.data) {
+    return (
+      <div className="min-h-screen flex items-center justify-center">
+        <div className="text-center">
+          <h1 className="text-4xl font-bold mb-4 text-destructive">Error Loading Bracket</h1>
+          <p className="text-xl text-muted-foreground mb-6">{result.message}</p>
+          <p className="text-sm text-muted-foreground mb-4">
+            Make sure MongoDB is running and the database is seeded.
+          </p>
+          <div className="flex gap-4 justify-center">
+            <Button asChild>
+              <Link href="/admin">Go to Admin Dashboard</Link>
+            </Button>
+          </div>
+        </div>
+      </div>
+    );
+  }
+
+  return (
+    <div>
+      {/* Navigation */}
+      <div className="fixed top-4 right-4 z-50">
+        <Button asChild variant="outline">
+          <Link href="/admin">Admin Dashboard</Link>
+        </Button>
+      </div>
+
+      {/* Tournament Bracket */}
+      <TournamentBracket matches={result.data} />
+    </div>
+  );
+}
