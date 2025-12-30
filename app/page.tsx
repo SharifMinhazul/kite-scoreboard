@@ -1,97 +1,152 @@
 import Link from "next/link";
 import { Button } from "@/components/ui/button";
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
-import { Trophy, Target, Table2 } from "lucide-react";
 
 export default function HomePage() {
   const games = [
     {
-      title: "FIFA Tournament",
-      icon: Trophy,
-      description: "World Cup-style knockout bracket with group stage",
-      color: "from-green-500 to-emerald-600",
+      title: "FIFA WORLD CUP",
+      subtitle: "KNOCKOUT BRACKET",
+      description: "16-TEAM ELIMINATION • GROUP STAGE QUALIFYING",
       href: "/fifa",
       groupsHref: "/fifa/groups",
+      accentColor: "hsl(var(--primary))",
+      num: "01",
     },
     {
-      title: "Dart Tournament",
-      icon: Target,
-      description: "Round-based elimination with top 50% qualification",
-      color: "from-red-500 to-orange-600",
+      title: "DART CHALLENGE",
+      subtitle: "SURVIVAL MODE",
+      description: "ROUND ELIMINATION • TOP 50% ADVANCE",
       href: "/dart",
+      accentColor: "hsl(var(--secondary))",
+      num: "02",
     },
     {
-      title: "Table Tennis",
-      icon: Table2,
-      description: "Knockout bracket with group stage qualifying",
-      color: "from-blue-500 to-cyan-600",
+      title: "TABLE TENNIS",
+      subtitle: "CHAMPIONSHIP",
+      description: "16-TEAM BRACKET • 8 GROUP QUALIFIERS",
       href: "/table-tennis",
       groupsHref: "/table-tennis/groups",
+      accentColor: "hsl(var(--accent))",
+      num: "03",
     },
   ];
 
   return (
-    <div className="min-h-screen">
-      {/* Navigation */}
-      <div className="fixed top-4 right-4 z-50">
-        <Button asChild variant="outline" size="sm">
-          <Link href="/login">Admin Login</Link>
+    <div className="min-h-screen relative overflow-hidden">
+      {/* Corner accent bars */}
+      <div className="fixed top-0 left-0 w-2 h-32 bg-gradient-to-b from-primary to-transparent z-50"></div>
+      <div className="fixed top-0 right-0 w-32 h-2 bg-gradient-to-l from-secondary to-transparent z-50"></div>
+
+      {/* Admin access button */}
+      <div className="fixed top-6 right-6 z-50">
+        <Button asChild variant="outline" size="sm" className="border-primary text-primary hover:bg-primary hover:text-primary-foreground font-display">
+          <Link href="/login">ADMIN ACCESS</Link>
         </Button>
       </div>
 
-      {/* Hero Section */}
-      <div className="container mx-auto px-4 py-16 md:py-24">
-        <div className="text-center mb-16">
-          <h1 className="text-5xl md:text-7xl font-bold mb-4 bg-gradient-to-r from-primary via-secondary to-accent bg-clip-text text-transparent">
-            Kite Games Studio
+      {/* Main content */}
+      <div className="container mx-auto px-4 py-12 md:py-20">
+        {/* Broadcast header */}
+        <div className="text-center mb-20 broadcast-title">
+          <div className="inline-block mb-6">
+            <div className="text-sm font-display tracking-[0.3em] text-primary mb-2">LIVE TOURNAMENT BROADCAST</div>
+            <div className="h-px bg-gradient-to-r from-transparent via-primary to-transparent"></div>
+          </div>
+
+          <h1 className="text-6xl md:text-8xl lg:text-9xl font-bold mb-4 leading-none">
+            <span className="block text-transparent bg-clip-text bg-gradient-to-r from-primary via-secondary to-accent">
+              KITE GAMES
+            </span>
+            <span className="block text-foreground mt-2">
+              STUDIO
+            </span>
           </h1>
-          <p className="text-xl md:text-2xl text-muted-foreground mb-2">
-            Tournament Scoreboards
-          </p>
-          <div className="mt-6 h-[2px] w-64 mx-auto bg-gradient-to-r from-transparent via-primary to-transparent" />
+
+          <div className="flex items-center justify-center gap-4 mt-8">
+            <div className="h-px w-16 bg-primary"></div>
+            <div className="electric-pulse w-3 h-3 bg-accent rounded-full"></div>
+            <p className="text-xs font-display tracking-widest text-muted-foreground">
+              REAL-TIME SCOREBOARDS
+            </p>
+            <div className="electric-pulse w-3 h-3 bg-accent rounded-full"></div>
+            <div className="h-px w-16 bg-primary"></div>
+          </div>
         </div>
 
-        {/* Games Grid */}
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 max-w-6xl mx-auto">
-          {games.map((game) => {
-            const Icon = game.icon;
-            return (
-              <Card
-                key={game.title}
-                className="border-2 hover:border-primary transition-all duration-300 hover:shadow-lg group"
-              >
-                <CardHeader>
-                  <div className={`w-16 h-16 rounded-lg bg-gradient-to-br ${game.color} flex items-center justify-center mb-4 group-hover:scale-110 transition-transform`}>
-                    <Icon className="w-8 h-8 text-white" />
+        {/* Tournament grid */}
+        <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 max-w-7xl mx-auto">
+          {games.map((game, index) => (
+            <div
+              key={game.title}
+              className={`broadcast-wipe stagger-${index + 1} group`}
+            >
+              <div className="relative border-2 border-border hover:border-primary transition-all duration-300 bg-card/50 backdrop-blur-sm stripe-pattern">
+                {/* Tournament number */}
+                <div className="absolute -top-4 -left-4 w-16 h-16 flex items-center justify-center" style={{ backgroundColor: game.accentColor }}>
+                  <span className="text-4xl font-bold" style={{ color: 'hsl(var(--background))' }}>{game.num}</span>
+                </div>
+
+                {/* Accent bar */}
+                <div className="absolute top-0 left-0 right-0 h-1" style={{ backgroundColor: game.accentColor }}></div>
+
+                <div className="p-8 pt-12">
+                  {/* Title */}
+                  <div className="mb-6">
+                    <h2 className="text-4xl font-bold mb-2 group-hover:text-primary transition-colors">
+                      {game.title}
+                    </h2>
+                    <div className="text-sm font-display tracking-wider" style={{ color: game.accentColor }}>
+                      {game.subtitle}
+                    </div>
                   </div>
-                  <CardTitle className="text-2xl">{game.title}</CardTitle>
-                  <CardDescription className="text-base">
+
+                  {/* Description */}
+                  <p className="text-xs font-mono text-muted-foreground mb-8 leading-relaxed">
                     {game.description}
-                  </CardDescription>
-                </CardHeader>
-                <CardContent className="space-y-2">
-                  <Button asChild className="w-full" size="lg">
-                    <Link href={game.href}>View Bracket</Link>
-                  </Button>
-                  {game.groupsHref && (
-                    <Button asChild variant="outline" className="w-full">
-                      <Link href={game.groupsHref}>View Groups</Link>
+                  </p>
+
+                  {/* Actions */}
+                  <div className="space-y-3">
+                    <Button asChild className="w-full font-display tracking-wider" size="lg">
+                      <Link href={game.href}>
+                        VIEW BRACKET →
+                      </Link>
                     </Button>
-                  )}
-                </CardContent>
-              </Card>
-            );
-          })}
+                    {game.groupsHref && (
+                      <Button asChild variant="outline" className="w-full font-display tracking-wider border-primary text-primary hover:bg-primary hover:text-primary-foreground">
+                        <Link href={game.groupsHref}>
+                          GROUP STAGE →
+                        </Link>
+                      </Button>
+                    )}
+                  </div>
+                </div>
+
+                {/* Corner decoration */}
+                <div className="absolute bottom-0 right-0 w-16 h-16 border-t-2 border-l-2 border-border group-hover:border-primary transition-colors"></div>
+              </div>
+            </div>
+          ))}
         </div>
 
-        {/* Footer Info */}
-        <div className="mt-16 text-center">
-          <p className="text-sm text-muted-foreground">
-            Live tournament brackets with real-time updates
-          </p>
-          <p className="text-xs text-muted-foreground mt-2">
-            Powered by Next.js, MongoDB & Shadcn UI
-          </p>
+        {/* Stats footer */}
+        <div className="mt-20 text-center">
+          <div className="inline-flex items-center gap-8 text-xs font-mono text-muted-foreground">
+            <div className="flex items-center gap-2">
+              <div className="w-2 h-2 bg-accent"></div>
+              <span>LIVE UPDATES</span>
+            </div>
+            <div className="h-px w-16 bg-border"></div>
+            <div className="flex items-center gap-2">
+              <div className="w-2 h-2 bg-primary"></div>
+              <span>AUTO-ADVANCE</span>
+            </div>
+            <div className="h-px w-16 bg-border"></div>
+            <div className="flex items-center gap-2">
+              <div className="w-2 h-2 bg-secondary"></div>
+              <span>GROUP STAGES</span>
+            </div>
+          </div>
         </div>
       </div>
     </div>
