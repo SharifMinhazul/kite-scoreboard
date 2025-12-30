@@ -9,7 +9,9 @@
       "Bash(git init:*)",
       "Bash(git add:*)",
       "Bash(git commit -m \"$\\(cat <<''EOF''\nAdd tournament scorecard platform with group stage and knockout bracket\n\n- Initialize Next.js 15 with TypeScript, Tailwind CSS, and Shadcn UI\n- Add MongoDB integration with Mongoose schemas\n- Implement Match model with doubly linked list structure for auto-advance\n- Implement Group model for group stage with round-robin format\n- Create seeding scripts for both knockout bracket and group stage\n- Add auto-advance server actions for knockout matches\n- Create mirrored 3-column bracket UI \\(Left/Center/Right converging\\)\n- Build group standings page with 2x4 grid layout\n- Add admin dashboard for managing knockout matches\n- Add admin panel for group stage match results\n- Add admin setup page for distributing players to groups\n- Implement point calculation and standings for group stage\n- Create API routes for groups management and match updates\n- Add dark theme with neon green/cyan/purple color scheme\n\n🤖 Generated with [Claude Code]\\(https://claude.com/claude-code\\)\n\nCo-Authored-By: Claude Sonnet 4.5 <noreply@anthropic.com>\nEOF\n\\)\")",
-      "Bash(git commit:*)"
+      "Bash(git commit:*)",
+      "Bash(npm run dev:*)",
+      "Bash(npm run build:*)"
     ]
   }
 }

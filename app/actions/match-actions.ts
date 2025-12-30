@@ -147,7 +147,7 @@ export async function getAllMatches(): Promise<ActionResult<IMatch[]>> {
     return {
       success: true,
       message: "Matches retrieved successfully",
-      data: matches as IMatch[],
+      data: matches as unknown as IMatch[],
     };
   } catch (error) {
     console.error("Error fetching matches:", error);
@@ -170,7 +170,7 @@ export async function getMatchesByRound(round: string): Promise<ActionResult<IMa
     return {
       success: true,
       message: `Matches for round ${round} retrieved successfully`,
-      data: matches as IMatch[],
+      data: matches as unknown as IMatch[],
     };
   } catch (error) {
     console.error("Error fetching matches by round:", error);

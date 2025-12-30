@@ -205,6 +205,9 @@ function GroupStandingsCard({
             <TableRow>
               <TableHead className="w-8 text-center">#</TableHead>
               <TableHead>Player</TableHead>
+              <TableHead className="w-10 text-center">W</TableHead>
+              <TableHead className="w-10 text-center">L</TableHead>
+              <TableHead className="w-10 text-center">GD</TableHead>
               <TableHead className="w-12 text-center">Pts</TableHead>
             </TableRow>
           </TableHeader>
@@ -226,6 +229,15 @@ function GroupStandingsCard({
                       </Badge>
                     )}
                   </div>
+                </TableCell>
+                <TableCell className="text-center text-xs">
+                  {player.wins}
+                </TableCell>
+                <TableCell className="text-center text-xs">
+                  {player.losses}
+                </TableCell>
+                <TableCell className="text-center text-xs">
+                  {player.goalDifference > 0 ? '+' : ''}{player.goalDifference}
                 </TableCell>
                 <TableCell className="text-center font-bold text-sm">
                   {player.points}
@@ -251,21 +263,15 @@ function GroupStandingsCard({
 
         {/* Stats */}
         <div className="pt-2 border-t">
-          <div className="grid grid-cols-3 gap-2 text-xs text-center text-muted-foreground">
+          <div className="grid grid-cols-2 gap-2 text-xs text-center text-muted-foreground">
             <div>
               <div className="font-bold">MP</div>
               <div>{standings[0]?.matchesPlayed || 0}</div>
             </div>
             <div>
-              <div className="font-bold">GD</div>
+              <div className="font-bold">GF / GA</div>
               <div>
-                {standings[0]?.goalDifference || 0} / {standings[1]?.goalDifference || 0}
-              </div>
-            </div>
-            <div>
-              <div className="font-bold">GF</div>
-              <div>
-                {standings[0]?.goalsFor || 0} / {standings[1]?.goalsFor || 0}
+                {standings[0]?.goalsFor || 0} / {standings[0]?.goalsAgainst || 0}
               </div>
             </div>
           </div>

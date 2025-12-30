@@ -12,7 +12,7 @@ async function getGroups() {
   try {
     await connectDB();
     const groups = await Group.find({}).sort({ name: 1 }).lean();
-    return groups as IGroup[];
+    return groups as unknown as IGroup[];
   } catch (error) {
     console.error("Error fetching groups:", error);
     return [];
@@ -92,6 +92,9 @@ export default async function GroupsPage() {
             <strong>Points:</strong> Win = 3, Draw = 1, Loss = 0
           </div>
           <div className="text-muted-foreground">
+            <strong>W/L:</strong> Wins / Losses
+          </div>
+          <div className="text-muted-foreground">
             <strong>GD:</strong> Goal Difference (Goals For - Goals Against)
           </div>
           <div className="text-muted-foreground">
@@ -133,6 +136,9 @@ function GroupStandingsCard({ group }: { group: IGroup }) {
             <TableRow>
               <TableHead className="w-12 text-center">#</TableHead>
               <TableHead>Player</TableHead>
+              <TableHead className="text-center w-12">W</TableHead>
+              <TableHead className="text-center w-12">L</TableHead>
+              <TableHead className="text-center w-12">GD</TableHead>
               <TableHead className="text-center w-16">Pts</TableHead>
             </TableRow>
           </TableHeader>
@@ -152,6 +158,15 @@ function GroupStandingsCard({ group }: { group: IGroup }) {
                       Q
                     </Badge>
                   )}
+                </TableCell>
+                <TableCell className="text-center text-sm">
+                  {player.wins}
+                </TableCell>
+                <TableCell className="text-center text-sm">
+                  {player.losses}
+                </TableCell>
+                <TableCell className="text-center text-sm">
+                  {player.goalDifference > 0 ? '+' : ''}{player.goalDifference}
                 </TableCell>
                 <TableCell className="text-center font-bold">
                   {player.points}

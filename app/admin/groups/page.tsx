@@ -10,6 +10,13 @@ import Link from "next/link";
 
 interface Player {
   name: string;
+  matchesPlayed: number;
+  wins: number;
+  draws: number;
+  losses: number;
+  goalsFor: number;
+  goalsAgainst: number;
+  goalDifference: number;
   points: number;
 }
 
@@ -256,26 +263,38 @@ export default function AdminGroupsPage() {
               {currentGroup && (
                 <div className="space-y-2">
                   {[...currentGroup.players]
-                    .sort((a, b) => b.points - a.points)
+                    .sort((a, b) => {
+                      if (b.points !== a.points) return b.points - a.points;
+                      if (b.goalDifference !== a.goalDifference) return b.goalDifference - a.goalDifference;
+                      if (b.goalsFor !== a.goalsFor) return b.goalsFor - a.goalsFor;
+                      return 0;
+                    })
                     .map((player, index) => (
                       <div
                         key={player.name}
-                        className={`flex justify-between items-center p-3 rounded ${
+                        className={`p-3 rounded ${
                           index < 2 ? "bg-primary/10 border border-primary" : "bg-muted/50"
                         }`}
                       >
-                        <div className="flex items-center gap-2">
-                          <span className="font-mono w-6">{index + 1}.</span>
-                          <span className="font-medium">{player.name}</span>
-                          {index < 2 && (
-                            <Badge variant="default" className="bg-primary text-[10px]">
-                              Q
-                            </Badge>
-                          )}
+                        <div className="flex justify-between items-center mb-2">
+                          <div className="flex items-center gap-2">
+                            <span className="font-mono w-6">{index + 1}.</span>
+                            <span className="font-medium">{player.name}</span>
+                            {index < 2 && (
+                              <Badge variant="default" className="bg-primary text-[10px]">
+                                Q
+                              </Badge>
+                            )}
+                          </div>
+                          <Badge variant="outline" className="font-bold">
+                            {player.points} pts
+                          </Badge>
                         </div>
-                        <Badge variant="outline" className="font-bold">
-                          {player.points} pts
-                        </Badge>
+                        <div className="flex gap-4 text-xs text-muted-foreground ml-8">
+                          <span>W: {player.wins}</span>
+                          <span>L: {player.losses}</span>
+                          <span>GD: {player.goalDifference > 0 ? '+' : ''}{player.goalDifference}</span>
+                        </div>
                       </div>
                     ))}
                 </div>
