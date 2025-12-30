@@ -98,9 +98,9 @@ export default async function GroupsPage({
       </div>
 
       {/* Groups Grid - 2 Rows × 4 Columns */}
-      <div className="max-w-7xl mx-auto space-y-8">
+      <div className="max-w-[1600px] mx-auto space-y-8">
         {/* Row 1: Groups A, B, C, D */}
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
           {row1Groups.map((group, index) => (
             <div key={group.name} className={`broadcast-wipe stagger-${index + 1}`}>
               <GroupStandingsCard group={group} />
@@ -109,7 +109,7 @@ export default async function GroupsPage({
         </div>
 
         {/* Row 2: Groups E, F, G, H */}
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
           {row2Groups.map((group, index) => (
             <div key={group.name} className={`broadcast-wipe stagger-${index + 1}`}>
               <GroupStandingsCard group={group} />
