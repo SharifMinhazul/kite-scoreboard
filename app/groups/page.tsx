@@ -112,11 +112,19 @@ function GroupStandingsCard({ group }: { group: IGroup }) {
     return 0;
   });
 
+  // Check if top 2 have same points (tie)
+  const hasTie = standings.length >= 2 &&
+                 standings[0].points === standings[1].points &&
+                 standings[0].points > 0;
+
   return (
     <Card className="border-2">
       <CardHeader className="pb-3">
-        <CardTitle className="text-center text-2xl font-bold">
+        <CardTitle className="text-center text-2xl font-bold flex items-center justify-center gap-2">
           Group {group.name}
+          {hasTie && (
+            <Badge variant="destructive" className="text-[10px]">TIE</Badge>
+          )}
         </CardTitle>
       </CardHeader>
       <CardContent className="p-0">

@@ -129,14 +129,17 @@ export default function AdminGroupsPage() {
             <h1 className="text-3xl font-bold mb-2">Group Stage Admin</h1>
             <p className="text-muted-foreground">Enter group match results</p>
           </div>
-          <div className="flex gap-2">
+          <div className="flex gap-2 flex-wrap">
             <Button asChild variant="default">
               <Link href="/admin/groups/setup">Add Players</Link>
+            </Button>
+            <Button asChild variant="secondary">
+              <Link href="/admin/groups/standings">Manage Ties</Link>
             </Button>
             <Button asChild variant="outline">
               <Link href="/groups">View Standings</Link>
             </Button>
-            <Button asChild variant="secondary">
+            <Button asChild variant="outline">
               <Link href="/admin">Knockout Admin</Link>
             </Button>
           </div>
