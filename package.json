@@ -11,6 +11,7 @@
     "seed-groups": "dotenv -e .env.local -- tsx scripts/seed-groups.ts",
     "seed-dart": "dotenv -e .env.local -- tsx scripts/seed-dart.ts",
     "seed-table-tennis": "dotenv -e .env.local -- tsx scripts/seed-table-tennis.ts",
+    "seed-tt-groups": "dotenv -e .env.local -- tsx scripts/seed-tt-groups.ts",
     "add-players": "dotenv -e .env.local -- tsx scripts/add-players.ts"
   },
   "dependencies": {
