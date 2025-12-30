@@ -97,20 +97,29 @@ export default async function TTGroupsPage({
         <div className="h-[2px] bg-gradient-to-r from-transparent via-accent to-transparent" />
       </div>
 
-      {/* Groups Grid - 2 Rows × 4 Columns */}
+      {/* Groups Grid */}
       <div className="max-w-[1600px] mx-auto space-y-8">
-        {/* Row 1: Groups A, B, C, D */}
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
-          {row1Groups.map((group, index) => (
+        {/* Row 1: Groups A, B, C */}
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+          {groups.slice(0, 3).map((group, index) => (
             <div key={group.name} className={`broadcast-wipe stagger-${index + 1}`}>
               <GroupStandingsCard group={group} />
             </div>
           ))}
         </div>
 
-        {/* Row 2: Groups E, F, G, H */}
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
-          {row2Groups.map((group, index) => (
+        {/* Row 2: Groups D, E, F */}
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+          {groups.slice(3, 6).map((group, index) => (
+            <div key={group.name} className={`broadcast-wipe stagger-${index + 1}`}>
+              <GroupStandingsCard group={group} />
+            </div>
+          ))}
+        </div>
+
+        {/* Row 3: Groups G, H */}
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+          {groups.slice(6, 8).map((group, index) => (
             <div key={group.name} className={`broadcast-wipe stagger-${index + 1}`}>
               <GroupStandingsCard group={group} />
             </div>
