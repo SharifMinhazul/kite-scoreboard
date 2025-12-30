@@ -16,9 +16,9 @@ function buildMatchDefinitions(): MatchDefinition[] {
   const matches: MatchDefinition[] = [];
 
   // LEFT SIDE
-  // Round of 16 (8 matches)
-  for (let i = 0; i < 8; i++) {
-    const qfMatch = Math.floor(i / 2) + 1; // 0-1 -> QF-1, 2-3 -> QF-2, etc.
+  // Round of 16 (4 matches on left)
+  for (let i = 0; i < 4; i++) {
+    const qfMatch = Math.floor(i / 2) + 1; // 0-1 -> QF-1, 2-3 -> QF-2
     const slot: Slot = i % 2 === 0 ? "player1" : "player2";
 
     matches.push({
@@ -33,9 +33,8 @@ function buildMatchDefinitions(): MatchDefinition[] {
     });
   }
 
-  // Quarter Finals (4 matches)
-  for (let i = 0; i < 4; i++) {
-    const sfMatch = Math.floor(i / 2) + 1; // 0-1 -> SF-1, 2-3 -> SF-2
+  // Quarter Finals (2 matches on left)
+  for (let i = 0; i < 2; i++) {
     const slot: Slot = i % 2 === 0 ? "player1" : "player2";
 
     matches.push({
@@ -43,31 +42,29 @@ function buildMatchDefinitions(): MatchDefinition[] {
       round: "QF",
       side: "left",
       position: i,
-      nextMatchId: `L-SF-${sfMatch}`,
+      nextMatchId: "L-SF-1",
       winnerDestinationSlot: slot,
       loserNextMatchId: null,
       loserDestinationSlot: null,
     });
   }
 
-  // Semi Finals (2 matches)
-  for (let i = 0; i < 2; i++) {
-    matches.push({
-      id: `L-SF-${i + 1}`,
-      round: "SF",
-      side: "left",
-      position: i,
-      nextMatchId: "C-F-1", // Both winners go to Final
-      winnerDestinationSlot: "player1", // Left side winner is player1 in Final
-      loserNextMatchId: "C-3P-1", // Losers go to 3rd Place
-      loserDestinationSlot: "player1", // Left side loser is player1 in 3rd Place
-    });
-  }
+  // Semi Final (1 match on left)
+  matches.push({
+    id: "L-SF-1",
+    round: "SF",
+    side: "left",
+    position: 0,
+    nextMatchId: "C-F-1",
+    winnerDestinationSlot: "player1",
+    loserNextMatchId: null,
+    loserDestinationSlot: null,
+  });
 
   // RIGHT SIDE
-  // Round of 16 (8 matches)
-  for (let i = 0; i < 8; i++) {
-    const qfMatch = Math.floor(i / 2) + 1;
+  // Round of 16 (4 matches on right)
+  for (let i = 0; i < 4; i++) {
+    const qfMatch = Math.floor(i / 2) + 1; // 0-1 -> QF-1, 2-3 -> QF-2
     const slot: Slot = i % 2 === 0 ? "player1" : "player2";
 
     matches.push({
@@ -82,9 +79,8 @@ function buildMatchDefinitions(): MatchDefinition[] {
     });
   }
 
-  // Quarter Finals (4 matches)
-  for (let i = 0; i < 4; i++) {
-    const sfMatch = Math.floor(i / 2) + 1;
+  // Quarter Finals (2 matches on right)
+  for (let i = 0; i < 2; i++) {
     const slot: Slot = i % 2 === 0 ? "player1" : "player2";
 
     matches.push({
@@ -92,26 +88,24 @@ function buildMatchDefinitions(): MatchDefinition[] {
       round: "QF",
       side: "right",
       position: i,
-      nextMatchId: `R-SF-${sfMatch}`,
+      nextMatchId: "R-SF-1",
       winnerDestinationSlot: slot,
       loserNextMatchId: null,
       loserDestinationSlot: null,
     });
   }
 
-  // Semi Finals (2 matches)
-  for (let i = 0; i < 2; i++) {
-    matches.push({
-      id: `R-SF-${i + 1}`,
-      round: "SF",
-      side: "right",
-      position: i,
-      nextMatchId: "C-F-1", // Both winners go to Final
-      winnerDestinationSlot: "player2", // Right side winner is player2 in Final
-      loserNextMatchId: "C-3P-1", // Losers go to 3rd Place
-      loserDestinationSlot: "player2", // Right side loser is player2 in 3rd Place
-    });
-  }
+  // Semi Final (1 match on right)
+  matches.push({
+    id: "R-SF-1",
+    round: "SF",
+    side: "right",
+    position: 0,
+    nextMatchId: "C-F-1",
+    winnerDestinationSlot: "player2",
+    loserNextMatchId: null,
+    loserDestinationSlot: null,
+  });
 
   // CENTER - FINAL
   matches.push({
@@ -119,19 +113,7 @@ function buildMatchDefinitions(): MatchDefinition[] {
     round: "Final",
     side: "center",
     position: 0,
-    nextMatchId: null, // No next match
-    winnerDestinationSlot: null,
-    loserNextMatchId: null,
-    loserDestinationSlot: null,
-  });
-
-  // CENTER - 3RD PLACE
-  matches.push({
-    id: "C-3P-1",
-    round: "3rdPlace",
-    side: "center",
-    position: 1,
-    nextMatchId: null, // No next match
+    nextMatchId: null,
     winnerDestinationSlot: null,
     loserNextMatchId: null,
     loserDestinationSlot: null,
@@ -215,7 +197,7 @@ async function clearBracket() {
 async function printSummary() {
   console.log("\n=== BRACKET SUMMARY ===");
 
-  const rounds: Round[] = ["R16", "QF", "SF", "Final", "3rdPlace"];
+  const rounds: Round[] = ["R16", "QF", "SF", "Final"];
 
   for (const round of rounds) {
     const count = await Match.countDocuments({ round });

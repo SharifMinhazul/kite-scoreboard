@@ -14,7 +14,6 @@ const ROUND_LABELS: Record<Round, string> = {
   QF: "Quarter Finals",
   SF: "Semi Finals",
   Final: "Final",
-  "3rdPlace": "3rd Place",
 };
 
 export function RoundColumn({
@@ -24,7 +23,7 @@ export function RoundColumn({
   showConnectors = false,
 }: RoundColumnProps) {
   // Calculate spacing based on round
-  // R16: minimal spacing, QF: 2x, SF: 4x, Final: centered
+  // R16: minimal spacing, QF: moderate, SF: larger spacing, Final: centered
   const getSpacingClass = () => {
     switch (round) {
       case "R16":
@@ -34,7 +33,6 @@ export function RoundColumn({
       case "SF":
         return "gap-12";
       case "Final":
-      case "3rdPlace":
         return "gap-0";
       default:
         return "gap-4";
@@ -51,8 +49,7 @@ export function RoundColumn({
         <h3
           className={cn(
             "text-sm font-bold uppercase tracking-wider",
-            round === "Final" && "text-primary text-lg",
-            round === "3rdPlace" && "text-secondary text-sm"
+            round === "Final" && "text-primary text-lg"
           )}
         >
           {ROUND_LABELS[round]}

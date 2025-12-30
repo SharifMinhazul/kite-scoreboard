@@ -1,6 +1,6 @@
 import mongoose, { Schema, Document, Model } from "mongoose";
 
-export type Round = "R16" | "QF" | "SF" | "Final" | "3rdPlace";
+export type Round = "R16" | "QF" | "SF" | "Final";
 export type Side = "left" | "right" | "center";
 export type MatchStatus = "scheduled" | "live" | "completed";
 export type Slot = "player1" | "player2";
@@ -46,7 +46,7 @@ const MatchSchema = new Schema<IMatch, MatchModel, IMatchMethods>(
     },
     round: {
       type: String,
-      enum: ["R16", "QF", "SF", "Final", "3rdPlace"],
+      enum: ["R16", "QF", "SF", "Final"],
       required: true,
     },
     side: {

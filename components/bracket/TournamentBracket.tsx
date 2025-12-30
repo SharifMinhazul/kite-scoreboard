@@ -23,7 +23,6 @@ export function TournamentBracket({ matches }: TournamentBracketProps) {
 
   // Center matches
   const finalMatch = centerMatches.filter((m) => m.round === "Final");
-  const thirdPlaceMatch = centerMatches.filter((m) => m.round === "3rdPlace");
 
   return (
     <div className="w-full min-h-screen p-4 md:p-8">
@@ -74,30 +73,14 @@ export function TournamentBracket({ matches }: TournamentBracketProps) {
           </div>
         </div>
 
-        {/* CENTER - Final & 3rd Place */}
-        <div className="flex flex-col justify-center gap-12 min-w-[250px]">
-          {/* Final */}
-          <div>
-            <RoundColumn
-              round="Final"
-              matches={finalMatch}
-              orientation="center"
-              showConnectors={false}
-            />
-          </div>
-
-          {/* Divider */}
-          <div className="h-[2px] bg-gradient-to-r from-transparent via-muted to-transparent" />
-
-          {/* 3rd Place */}
-          <div>
-            <RoundColumn
-              round="3rdPlace"
-              matches={thirdPlaceMatch}
-              orientation="center"
-              showConnectors={false}
-            />
-          </div>
+        {/* CENTER - Final */}
+        <div className="flex flex-col justify-center min-w-[250px]">
+          <RoundColumn
+            round="Final"
+            matches={finalMatch}
+            orientation="center"
+            showConnectors={false}
+          />
         </div>
 
         {/* RIGHT SIDE - R16 → QF → SF (flowing left) */}

@@ -10,7 +10,7 @@ interface MatchTableProps {
 export function MatchTable({ matches }: MatchTableProps) {
   // Sort matches by round, side, and position
   const sortedMatches = [...matches].sort((a, b) => {
-    const roundOrder = { R16: 1, QF: 2, SF: 3, Final: 4, "3rdPlace": 5 };
+    const roundOrder = { R16: 1, QF: 2, SF: 3, Final: 4 };
     if (roundOrder[a.round] !== roundOrder[b.round]) {
       return roundOrder[a.round] - roundOrder[b.round];
     }
@@ -110,8 +110,8 @@ export function MatchTable({ matches }: MatchTableProps) {
                       match.status === "completed"
                         ? "default"
                         : match.status === "live"
-                        ? "destructive"
-                        : "outline"
+                          ? "destructive"
+                          : "outline"
                     }
                     className="text-xs"
                   >

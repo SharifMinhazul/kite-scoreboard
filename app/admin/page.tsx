@@ -39,7 +39,6 @@ export default async function AdminPage() {
   const qfMatches = matches.filter((m) => m.round === "QF");
   const sfMatches = matches.filter((m) => m.round === "SF");
   const finalMatches = matches.filter((m) => m.round === "Final");
-  const thirdPlaceMatches = matches.filter((m) => m.round === "3rdPlace");
 
   // Stats
   const completedCount = matches.filter((m) => m.status === "completed").length;
@@ -112,7 +111,7 @@ export default async function AdminPage() {
               Quarter Finals
               <Badge variant="outline">{qfMatches.length} matches</Badge>
             </h2>
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4">
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
               {qfMatches.map((match) => (
                 <ScoreInput key={match.id} match={match} />
               ))}
@@ -135,18 +134,17 @@ export default async function AdminPage() {
           </section>
         )}
 
-        {/* Final & 3rd Place */}
-        <section>
-          <h2 className="text-2xl font-bold mb-4">Championship Matches</h2>
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-4 max-w-2xl">
-            {finalMatches.map((match) => (
-              <ScoreInput key={match.id} match={match} />
-            ))}
-            {thirdPlaceMatches.map((match) => (
-              <ScoreInput key={match.id} match={match} />
-            ))}
-          </div>
-        </section>
+        {/* Final */}
+        {finalMatches.length > 0 && (
+          <section>
+            <h2 className="text-2xl font-bold mb-4">🏆 Final</h2>
+            <div className="grid grid-cols-1 max-w-md">
+              {finalMatches.map((match) => (
+                <ScoreInput key={match.id} match={match} />
+              ))}
+            </div>
+          </section>
+        )}
 
         {/* Table View */}
         <section>
